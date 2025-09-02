@@ -33,6 +33,9 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# developer setup (contains sensitive API information)
+DEVELOPER_SETUP.md
+
 # vercel
 .vercel
 
@@ -41,4 +44,4 @@ yarn-error.log*
 next-env.d.ts
 
 .idea
-.vscode
+.vscode.npm-cache/

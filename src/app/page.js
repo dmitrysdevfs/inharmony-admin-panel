@@ -1,9 +1,10 @@
 export default function Home() {
   return (
     <div>
-      <main>
-        <h1>Home page</h1>
-      </main>
+      <h1>InHarmony Admin Panel</h1>
+      <p>
+        Перейдіть на <a href="/collections">Збори коштів</a>
+      </p>
     </div>
   );
 }
