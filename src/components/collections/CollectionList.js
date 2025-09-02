@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { collectionsApi } from '../../lib/api';
+import { fetchCollections } from '../../services/collectionsService'; // 🔄 ОНОВЛЕНИЙ ІМПОРТ
 import Table from '../ui/Table';
 import Button from '../ui/Button';
 import { formatDate, formatMoney, cn } from '../../lib/utils';
@@ -16,7 +16,7 @@ const CollectionList = ({ locale = 'ua' }) => {
   const [fallbackReason, setFallbackReason] = useState('');
   const [pagination, setPagination] = useState({
     page: 1,
-    limit: 6, // змінюємо на 6 зборів на сторінку як в API
+    limit: 6,
     total: 0,
   });
 
@@ -30,11 +30,7 @@ const CollectionList = ({ locale = 'ua' }) => {
       setFallback(false);
       setFallbackReason('');
 
-      const response = await collectionsApi.getCollections(
-        locale,
-        pagination.page,
-        pagination.limit
-      );
+      const response = await fetchCollections(locale, pagination.page, pagination.limit); // 🔄 НОВИЙ ВИКЛИК
 
       setCollections(response.data || []);
       setFallback(response.fallback || false);
@@ -44,7 +40,6 @@ const CollectionList = ({ locale = 'ua' }) => {
         total: response.total || 0,
       }));
     } catch (error) {
-      console.error('Error loading collections:', error);
       setFallback(true);
       setFallbackReason('Помилка завантаження');
     } finally {
