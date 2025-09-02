@@ -1,4 +1,4 @@
-# Next.js - Template
+# InHarmony Admin Panel
 
 Starter template based on Next.js 15.4.3.
 
