@@ -28,3 +28,7 @@ npm run dev
 - Prettier configuration (.prettierrc) for consistent code formatting
 - Minimal setup without TypeScript or Tailwind (can be added later)
 - Ready for scaling with src/ directory structure
+
+## Documentation
+
+- `API_SETUP.md` - Налаштування API та environment variables

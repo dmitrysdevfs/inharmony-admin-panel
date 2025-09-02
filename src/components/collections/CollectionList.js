@@ -12,9 +12,11 @@ const CollectionList = ({ locale = 'ua' }) => {
   const router = useRouter();
   const [collections, setCollections] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [fallback, setFallback] = useState(false);
+  const [fallbackReason, setFallbackReason] = useState('');
   const [pagination, setPagination] = useState({
     page: 1,
-    limit: 10,
+    limit: 6, // змінюємо на 6 зборів на сторінку як в API
     total: 0,
   });
 
@@ -25,6 +27,9 @@ const CollectionList = ({ locale = 'ua' }) => {
   const loadCollections = async () => {
     try {
       setLoading(true);
+      setFallback(false);
+      setFallbackReason('');
+
       const response = await collectionsApi.getCollections(
         locale,
         pagination.page,
@@ -32,12 +37,16 @@ const CollectionList = ({ locale = 'ua' }) => {
       );
 
       setCollections(response.data || []);
+      setFallback(response.fallback || false);
+      setFallbackReason(response.reason || '');
       setPagination(prev => ({
         ...prev,
         total: response.total || 0,
       }));
     } catch (error) {
       console.error('Error loading collections:', error);
+      setFallback(true);
+      setFallbackReason('Помилка завантаження');
     } finally {
       setLoading(false);
     }
@@ -117,11 +126,22 @@ const CollectionList = ({ locale = 'ua' }) => {
         </Button>
       </div>
 
+      {fallback && (
+        <div className={styles.fallbackWarning}>
+          ⚠️ Використовуються тестові дані
+          {fallbackReason && <span className={styles.fallbackReason}> ({fallbackReason})</span>}
+        </div>
+      )}
+
       <Table
         columns={columns}
         data={collections}
         onRowClick={row => console.log('Row clicked:', row)}
       />
+
+      {collections.length === 0 && !loading && (
+        <div className={styles.emptyState}>Немає зборів для відображення</div>
+      )}
 
       {totalPages > 1 && (
         <div className={styles.pagination}>
