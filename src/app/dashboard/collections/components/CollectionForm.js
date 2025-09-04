@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import Button from '../ui/Button';
-import Input from '../ui/Input';
+import Button from '../../../components/ui/Button';
+import Input from '../../../components/ui/Input';
 import styles from './CollectionForm.module.css';
 
 const CollectionForm = ({ collection, onSubmit, loading = false }) => {
