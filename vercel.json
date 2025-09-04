@@ -1,8 +1,7 @@
 {
   "git": {
     "deploymentEnabled": {
-      "main": false,
-      "feature/collections-foundation": true
+      "main": true
     }
   },
   "buildCommand": "npm run build",
