@@ -3,7 +3,7 @@ import { adaptCollection } from '../lib/adapters';
 const handleResponse = async response => {
   const data = await response.json();
   if (!response.ok) {
-    throw new Error(data?.error || `Request failed: ${response.statusText}`);
+    throw new Error(data?.error || data?.details || `Request failed: ${response.statusText}`);
   }
   return data;
 };
