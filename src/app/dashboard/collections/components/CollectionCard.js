@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatDate, formatMoney, cn } from '../../lib/utils';
+import { formatDate, formatMoney, cn } from '../../../lib/utils';
 import styles from './CollectionCard.module.css';
 
 const CollectionCard = ({ collection }) => {

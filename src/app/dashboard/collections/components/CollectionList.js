@@ -2,14 +2,18 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { fetchCollections } from '../../services/collectionsService'; // 🔄 ОНОВЛЕНИЙ ІМПОРТ
-import Table from '../ui/Table';
-import Button from '../ui/Button';
-import { formatDate, formatMoney, cn } from '../../lib/utils';
+import { fetchCollections } from '@/services/collectionsService';
+import Table from '@/components/ui/Table';
+import Button from '@/components/ui/Button';
+import { formatDate, formatMoney, cn } from '@/lib/utils';
 import styles from './CollectionList.module.css';
 
 const CollectionList = ({ locale = 'ua' }) => {
   const router = useRouter();
+
+  // 🔧 Константа для базового роуту колекцій
+  const BASE_ROUTE = '/dashboard/collections';
+
   const [collections, setCollections] = useState([]);
   const [loading, setLoading] = useState(true);
   const [fallback, setFallback] = useState(false);
@@ -30,7 +34,7 @@ const CollectionList = ({ locale = 'ua' }) => {
       setFallback(false);
       setFallbackReason('');
 
-      const response = await fetchCollections(locale, pagination.page, pagination.limit); // 🔄 НОВИЙ ВИКЛИК
+      const response = await fetchCollections(locale, pagination.page, pagination.limit);
 
       setCollections(response.data || []);
       setFallback(response.fallback || false);
@@ -90,14 +94,14 @@ const CollectionList = ({ locale = 'ua' }) => {
           <Button
             size="small"
             variant="outline"
-            onClick={() => router.push(`/collections/${row.id}`)}
+            onClick={() => router.push(`${BASE_ROUTE}/${row.id}`)}
           >
             Переглянути
           </Button>
           <Button
             size="small"
             variant="secondary"
-            onClick={() => router.push(`/collections/edit/${row.id}`)}
+            onClick={() => router.push(`${BASE_ROUTE}/edit/${row.id}`)}
           >
             Редагувати
           </Button>
@@ -116,7 +120,7 @@ const CollectionList = ({ locale = 'ua' }) => {
     <div className={styles.container}>
       <div className={styles.header}>
         <h2>Збори коштів</h2>
-        <Button variant="primary" onClick={() => router.push('/collections/new')}>
+        <Button variant="primary" onClick={() => router.push(`${BASE_ROUTE}/new`)}>
           Створити новий збір
         </Button>
       </div>

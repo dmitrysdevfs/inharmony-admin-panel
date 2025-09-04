@@ -1,6 +1,6 @@
 'use client';
 
-import CollectionList from '../../components/collections/CollectionList';
+import CollectionList from './components/CollectionList';
 
 export default function CollectionsPage() {
   return <CollectionList locale="ua" />;
