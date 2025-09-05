@@ -94,7 +94,7 @@ const CollectionList = ({ locale = 'ua' }) => {
           <Button
             size="small"
             variant="outline"
-            onClick={() => router.push(`${BASE_ROUTE}/${row.id}`)}
+             onClick={() => router.push(`${BASE_ROUTE}/${row.id}`)}
           >
             Переглянути
           </Button>

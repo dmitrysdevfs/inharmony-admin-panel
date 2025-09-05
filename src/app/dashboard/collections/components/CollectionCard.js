@@ -1,11 +1,16 @@
 import React from 'react';
-import { formatDate, formatMoney, cn } from '../../../lib/utils';
+import { formatDate, formatMoney, cn } from '@/lib/utils';
 import styles from './CollectionCard.module.css';
 
 const CollectionCard = ({ collection }) => {
   if (!collection) {
     return <div className={styles.notFound}>Збір не знайдено</div>;
   }
+
+  const collected = parseFloat(collection.collected);
+  const target = parseFloat(collection.target);
+
+  const progress = target !== 0 ? (collected / target) * 100 : 0;
 
   return (
     <div className={styles.card}>
@@ -17,17 +22,29 @@ const CollectionCard = ({ collection }) => {
       </div>
 
       <div className={styles.content}>
-        <p className={styles.description}>{collection.description}</p>
+        <p className={styles.description}>{collection.desc}</p>
+
+        <div className={styles.images}>
+          {collection.image &&
+            collection.image.map(img => (
+              <img
+                key={img._id}
+                src={img.url}
+                alt={collection.alt}
+                className={styles.collectionImage}
+              />
+            ))}
+        </div>
 
         <div className={styles.stats}>
           <div className={styles.stat}>
             <span className={styles.label}>Ціль:</span>
-            <span className={styles.value}>{formatMoney(collection.goal)}</span>
+            <span className={styles.value}>{formatMoney(collection.target)}</span>
           </div>
 
           <div className={styles.stat}>
             <span className={styles.label}>Зібрано:</span>
-            <span className={styles.value}>{formatMoney(collection.raised)}</span>
+            <span className={styles.value}>{formatMoney(collection.collected)}</span>
           </div>
 
           <div className={styles.stat}>
@@ -35,11 +52,11 @@ const CollectionCard = ({ collection }) => {
             <div className={styles.progressBar}>
               <div
                 className={styles.progressFill}
-                style={{ width: `${(collection.raised / collection.goal) * 100}%` }}
+                style={{ width: `${(collection.collected / collection.target) * 100}%` }}
               />
             </div>
             <span className={styles.progressText}>
-              {Math.round((collection.raised / collection.goal) * 100)}%
+              {Math.round(progress)}%
             </span>
           </div>
         </div>
