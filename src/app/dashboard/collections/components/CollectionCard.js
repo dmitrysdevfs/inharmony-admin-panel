@@ -32,7 +32,7 @@ const CollectionCard = ({ collection }) => {
               return (
                 <img
                   key={img._id}
-                  src={`https://inharmony-v3.h.goit.study/images/all/${imageName}`}
+                  src={`${process.env.NEXT_PUBLIC_API_BASE_URL}/images/all/${imageName}`}
                   alt={collection.alt}
                   className={styles.collectionImage}
                 />
