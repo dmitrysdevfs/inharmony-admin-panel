@@ -1,4 +1,6 @@
 import React from 'react';
+import Image from 'next/image';
+import { API_CONFIG } from '@/lib/config';
 import { formatDate, formatMoney, cn } from '@/lib/utils';
 import styles from './CollectionCard.module.css';
 
@@ -30,11 +32,15 @@ const CollectionCard = ({ collection }) => {
               const imageName = img.url.split('/').pop();
 
               return (
-                <img
+                <Image
                   key={img._id}
-                  src={`https://inharmony-v3.h.goit.study/images/all/${imageName}`}
+                  src={`${API_CONFIG.BASE_URL}/images/all/${imageName}`}
                   alt={collection.alt}
                   className={styles.collectionImage}
+                  width={300}
+                  height={200}
+                  priority={false}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
               );
             })}
