@@ -7,7 +7,7 @@ export async function GET(request) {
     // Не потрібно перевіряти Authorization заголовок
 
     // Перенаправляємо запит до InHarmony API
-    const response = await fetch(`${API_CONFIG.BASE_URL}/auth/profile`, {
+    const response = await fetch(`${API_CONFIG.BASE_URL}/api/auth/profile`, {
       method: 'GET',
       headers: {
         Accept: 'application/json',

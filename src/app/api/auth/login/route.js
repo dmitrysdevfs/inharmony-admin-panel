@@ -6,7 +6,7 @@ export async function POST(request) {
     const body = await request.json();
 
     // Перенаправляємо запит до InHarmony API
-    const response = await fetch(`${API_CONFIG.BASE_URL}/auth/login`, {
+    const response = await fetch(`${API_CONFIG.BASE_URL}/api/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

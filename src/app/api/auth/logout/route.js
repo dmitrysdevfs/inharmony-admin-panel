@@ -15,7 +15,7 @@ export async function POST(request) {
     console.log('🔐 API logout: cookie header:', cookieHeader);
     console.log('🔐 API logout: API_CONFIG.BASE_URL:', API_CONFIG.BASE_URL);
 
-    const response = await fetch(`${API_CONFIG.BASE_URL}/auth/logout`, {
+    const response = await fetch(`${API_CONFIG.BASE_URL}/api/auth/logout`, {
       method: 'POST',
       credentials: 'include',
       headers: {

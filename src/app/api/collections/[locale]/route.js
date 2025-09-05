@@ -6,7 +6,7 @@ export async function GET(request, { params }) {
     const { locale } = await params;
 
     // Перенаправляємо запит до InHarmony API
-    const response = await fetch(`${API_CONFIG.BASE_URL}/collections/${locale}`, {
+    const response = await fetch(`${API_CONFIG.BASE_URL}/api/collections/${locale}`, {
       method: 'GET',
       credentials: 'include',
       headers: {
