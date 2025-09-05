@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { fetchCollections } from '@/services/collectionsService';
 import Table from '@/components/ui/Table';
@@ -24,11 +24,7 @@ const CollectionList = ({ locale = 'ua' }) => {
     total: 0,
   });
 
-  useEffect(() => {
-    loadCollections();
-  }, [locale, pagination.page]);
-
-  const loadCollections = async () => {
+  const loadCollections = useCallback(async () => {
     try {
       setLoading(true);
       setFallback(false);
@@ -49,7 +45,11 @@ const CollectionList = ({ locale = 'ua' }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [locale, pagination.page, pagination.limit]);
+
+  useEffect(() => {
+    loadCollections();
+  }, [loadCollections]);
 
   const columns = [
     {

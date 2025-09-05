@@ -1,80 +1,372 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import Button from '../../../components/ui/Button';
-import Input from '../../../components/ui/Input';
+import Image from 'next/image';
+import Button from '@/components/ui/Button';
+import Input from '@/components/ui/Input';
 import styles from './CollectionForm.module.css';
 
-const CollectionForm = ({ collection, onSubmit, loading = false }) => {
+const CollectionForm = ({ collection, onSubmit, loading = false, locale = 'ua' }) => {
+  const [imagePreview, setImagePreview] = useState(collection?.image || null);
+  const [tags, setTags] = useState(collection?.tags || []);
+  const [newTag, setNewTag] = useState('');
+
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: collection || {
       title: '',
-      description: '',
-      goal: '',
+      desc: '',
+      target: '',
+      collected: 0,
+      alt: '',
+      peopleDonate: 0,
+      peopleDonate_title: 'донорів',
+      days: '',
+      period: 'днів',
+      quantity: 0,
       status: 'active',
+      value: '',
+      importance: 'important',
+      language: locale,
+      long_desc: {
+        section1: '',
+        section2: '',
+        section3: '',
+      },
     },
   });
 
   const handleFormSubmit = data => {
-    onSubmit(data);
+    const formData = {
+      ...data,
+      target: Number(data.target),
+      collected: Number(data.collected),
+      peopleDonate: Number(data.peopleDonate),
+      days: data.days ? Number(data.days) : 0,
+      quantity: Number(data.quantity),
+      image: imagePreview,
+    };
+    onSubmit(formData);
+  };
+
+  const handleImageChange = e => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        setImagePreview(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const addTag = () => {
+    if (newTag.trim() && !tags.includes(newTag.trim())) {
+      setTags([...tags, newTag.trim()]);
+      setNewTag('');
+    }
+  };
+
+  const removeTag = tagToRemove => {
+    setTags(tags.filter(tag => tag !== tagToRemove));
+  };
+
+  const handleKeyPress = e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      addTag();
+    }
   };
 
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className={styles.form}>
+      {/* Назва збору */}
       <div className={styles.formGroup}>
         <Input
-          label="Назва збору"
+          label="Назва збору *"
           {...register('title', {
             required: "Назва обов'язкова",
-            minLength: { value: 3, message: 'Мінімум 3 символи' },
+            maxLength: { value: 48, message: 'Максимум 48 символів' },
           })}
           error={errors.title?.message}
           placeholder="Введіть назву збору коштів"
         />
       </div>
 
+      {/* Короткий опис */}
       <div className={styles.formGroup}>
-        <Input
-          label="Опис"
-          {...register('description', {
-            required: "Опис обов'язковий",
-            minLength: { value: 10, message: 'Мінімум 10 символів' },
+        <label className={styles.label}>Короткий опис *</label>
+        <textarea
+          {...register('desc', {
+            required: "Короткий опис обов'язковий",
+            maxLength: { value: 144, message: 'Максимум 144 символи' },
           })}
-          error={errors.description?.message}
-          placeholder="Опишіть мету збору коштів"
+          className={styles.textarea}
+          placeholder="Короткий опис збору коштів..."
+          rows={3}
         />
+        {errors.desc && <span className={styles.error}>{errors.desc.message}</span>}
+        <small className={styles.helpText}>Максимум 144 символи</small>
       </div>
 
+      {/* Унікальний тег */}
       <div className={styles.formGroup}>
         <Input
-          label="Цільова сума (UAH)"
-          type="number"
-          {...register('goal', {
-            required: "Цільова сума обов'язкова",
-            min: { value: 1, message: 'Сума має бути більше 0' },
+          label="Унікальний тег *"
+          {...register('value', {
+            required: "Унікальний тег обов'язковий",
+            maxLength: { value: 48, message: 'Максимум 48 символів' },
           })}
-          error={errors.goal?.message}
-          placeholder="1000"
+          error={errors.value?.message}
+          placeholder="help-for-children"
         />
+        <small className={styles.helpText}>Унікальний ідентифікатор збору</small>
       </div>
 
+      {/* Зображення */}
       <div className={styles.formGroup}>
-        <label className={styles.label}>Статус</label>
-        <select {...register('status')} className={styles.select}>
-          <option value="active">Активний</option>
-          <option value="completed">Завершено</option>
-          <option value="draft">Чернетка</option>
+        <label className={styles.label}>Зображення збору *</label>
+        <div className={styles.imageUpload}>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className={styles.fileInput}
+            id="image-upload"
+          />
+          <label htmlFor="image-upload" className={styles.fileLabel}>
+            {imagePreview ? 'Змінити зображення' : 'Вибрати зображення'}
+          </label>
+          {imagePreview && (
+            <div className={styles.imagePreview}>
+              <Image
+                src={imagePreview}
+                alt="Превʼю зображення збору"
+                width={200}
+                height={150}
+                style={{ objectFit: 'cover' }}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Alt атрибут для зображення */}
+      <div className={styles.formGroup}>
+        <Input
+          label="Опис зображення *"
+          {...register('alt', {
+            required: "Опис зображення обов'язковий",
+            maxLength: { value: 24, message: 'Максимум 24 символи' },
+          })}
+          error={errors.alt?.message}
+          placeholder="Фото дітей"
+        />
+        <small className={styles.helpText}>Короткий опис зображення для доступності</small>
+      </div>
+
+      {/* Суми та донори */}
+      <div className={styles.formRow}>
+        <div className={styles.formGroup}>
+          <Input
+            label="Цільова сума (грн) *"
+            type="number"
+            {...register('target', {
+              required: "Цільова сума обов'язкова",
+              min: { value: 0, message: 'Сума не може бути відʼємною' },
+            })}
+            error={errors.target?.message}
+            placeholder="50000"
+          />
+        </div>
+        <div className={styles.formGroup}>
+          <Input
+            label="Зібрана сума (грн) *"
+            type="number"
+            {...register('collected', {
+              required: "Зібрана сума обов'язкова",
+              min: { value: 0, message: 'Сума не може бути відʼємною' },
+            })}
+            error={errors.collected?.message}
+            placeholder="15000"
+          />
+        </div>
+      </div>
+
+      <div className={styles.formRow}>
+        <div className={styles.formGroup}>
+          <Input
+            label="Кількість донорів *"
+            type="number"
+            {...register('peopleDonate', {
+              required: "Кількість донорів обов'язкова",
+              min: { value: 0, message: 'Кількість не може бути відʼємною' },
+            })}
+            error={errors.peopleDonate?.message}
+            placeholder="156"
+          />
+        </div>
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Текст для донорів *</label>
+          <select {...register('peopleDonate_title')} className={styles.select}>
+            <option value="донорів">донорів</option>
+            <option value="донори">донори</option>
+            <option value="донор">донор</option>
+            <option value="donor">donor</option>
+            <option value="donors">donors</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Термін та відгуки */}
+      <div className={styles.formRow}>
+        <div className={styles.formGroup}>
+          <Input
+            label="Кількість днів"
+            type="number"
+            {...register('days', {
+              min: { value: 0, message: 'Кількість днів не може бути відʼємною' },
+            })}
+            error={errors.days?.message}
+            placeholder="30"
+          />
+        </div>
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Період *</label>
+          <select {...register('period')} className={styles.select}>
+            <option value="day">day</option>
+            <option value="days">days</option>
+            <option value="день">день</option>
+            <option value="дні">дні</option>
+            <option value="днів">днів</option>
+          </select>
+        </div>
+      </div>
+
+      <div className={styles.formRow}>
+        <div className={styles.formGroup}>
+          <Input
+            label="Кількість відгуків"
+            type="number"
+            {...register('quantity', {
+              min: { value: 0, message: 'Кількість відгуків не може бути відʼємною' },
+            })}
+            error={errors.quantity?.message}
+            placeholder="12"
+          />
+        </div>
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Статус</label>
+          <select {...register('status')} className={styles.select}>
+            <option value="active">Активний</option>
+            <option value="closed">Закритий</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Теги */}
+      <div className={styles.formGroup}>
+        <label className={styles.label}>Теги</label>
+        <div className={styles.tagsContainer}>
+          <div className={styles.tagsInput}>
+            <input
+              type="text"
+              value={newTag}
+              onChange={e => setNewTag(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="Додати тег..."
+              className={styles.tagInput}
+            />
+            <Button type="button" variant="outline" size="small" onClick={addTag}>
+              Додати
+            </Button>
+          </div>
+          {tags.length > 0 && (
+            <div className={styles.tagsList}>
+              {tags.map((tag, index) => (
+                <span key={index} className={styles.tag}>
+                  {tag}
+                  <button type="button" onClick={() => removeTag(tag)} className={styles.tagRemove}>
+                    ×
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Важливість */}
+      <div className={styles.formGroup}>
+        <label className={styles.label}>Важливість збору *</label>
+        <select {...register('importance')} className={styles.select}>
+          <option value="urgent">Терміново</option>
+          <option value="important">Важливий</option>
+          <option value="non-urgent">Не терміново</option>
+          <option value="permanent">Постійний</option>
         </select>
+      </div>
+
+      {/* Мова */}
+      <div className={styles.formGroup}>
+        <label className={styles.label}>Мова збору</label>
+        <select {...register('language')} className={styles.select}>
+          <option value="ua">Українська</option>
+          <option value="en">English</option>
+        </select>
+      </div>
+
+      {/* Розширений опис */}
+      <div className={styles.formGroup}>
+        <label className={styles.label}>Розширений опис *</label>
+        <div className={styles.longDescContainer}>
+          <div className={styles.formGroup}>
+            <label className={styles.label}>Секція 1 *</label>
+            <textarea
+              {...register('long_desc.section1', {
+                required: "Перша секція обов'язкова",
+              })}
+              className={styles.textarea}
+              placeholder="Основна інформація про збір..."
+              rows={3}
+            />
+            {errors.long_desc?.section1 && (
+              <span className={styles.error}>{errors.long_desc.section1.message}</span>
+            )}
+          </div>
+
+          <div className={styles.formGroup}>
+            <label className={styles.label}>Секція 2</label>
+            <textarea
+              {...register('long_desc.section2')}
+              className={styles.textarea}
+              placeholder="Додаткова інформація..."
+              rows={3}
+            />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label className={styles.label}>Секція 3</label>
+            <textarea
+              {...register('long_desc.section3')}
+              className={styles.textarea}
+              placeholder="Додаткова інформація..."
+              rows={3}
+            />
+          </div>
+        </div>
+        <small className={styles.helpText}>Мінімум 1 секція обов&apos;язкова</small>
       </div>
 
       <div className={styles.formActions}>
         <Button type="submit" variant="primary" disabled={loading}>
-          {loading ? 'Збереження...' : collection ? 'Оновити' : 'Створити'}
+          {loading ? 'Збереження...' : collection ? 'Оновити збір' : 'Створити збір'}
         </Button>
 
         <Button type="button" variant="outline" onClick={() => window.history.back()}>

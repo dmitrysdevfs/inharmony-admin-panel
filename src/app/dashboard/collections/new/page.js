@@ -43,7 +43,7 @@ export default function NewCollectionPage() {
 
       {error && <div className={styles.error}>{error}</div>}
 
-      <CollectionForm onSubmit={handleSubmit} loading={loading} />
+      <CollectionForm onSubmit={handleSubmit} loading={loading} locale="ua" />
     </div>
   );
 }
