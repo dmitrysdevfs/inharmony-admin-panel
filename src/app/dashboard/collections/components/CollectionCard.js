@@ -26,14 +26,18 @@ const CollectionCard = ({ collection }) => {
 
         <div className={styles.images}>
           {collection.image &&
-            collection.image.map(img => (
-              <img
-                key={img._id}
-                src={img.url}
-                alt={collection.alt}
-                className={styles.collectionImage}
-              />
-            ))}
+            collection.image.map(img => {
+              const imageName = img.url.split('/').pop();
+
+              return (
+                <img
+                  key={img._id}
+                  src={`https://inharmony-v3.h.goit.study/images/all/${imageName}`}
+                  alt={collection.alt}
+                  className={styles.collectionImage}
+                />
+              );
+            })}
         </div>
 
         <div className={styles.stats}>
@@ -55,9 +59,7 @@ const CollectionCard = ({ collection }) => {
                 style={{ width: `${(collection.collected / collection.target) * 100}%` }}
               />
             </div>
-            <span className={styles.progressText}>
-              {Math.round(progress)}%
-            </span>
+            <span className={styles.progressText}>{Math.round(progress)}%</span>
           </div>
         </div>
 
