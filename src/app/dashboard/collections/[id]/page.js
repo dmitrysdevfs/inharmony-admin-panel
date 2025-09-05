@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import CollectionCard from '../components/CollectionCard';
+import Button from '@/components/ui/Button';
 import styles from './CollectionPage.module.css';
 
 export default function CollectionPage() {
@@ -40,9 +41,14 @@ export default function CollectionPage() {
 
   return (
     <>
-      <button className={styles.backButton} onClick={() => router.push('/dashboard/collections')}>
-        ← Назад до списку
-      </button>
+      <Button
+        size="large"
+        variant="outline"
+        onClick={() => router.push('/dashboard/collections')}
+        className={styles.backButton}
+      >
+        Назад до списку
+      </Button>
 
       <CollectionCard collection={collection} />
     </>
