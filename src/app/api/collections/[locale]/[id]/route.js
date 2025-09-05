@@ -6,7 +6,7 @@ export async function GET(request, { params }) {
   try {
     const { locale, id } = await params;
 
-    const response = await fetch(`${API_CONFIG.BASE_URL}/collections/${locale}/${id}`, {
+    const response = await fetch(`${API_CONFIG.BASE_URL}/api/collections/${locale}/${id}`, {
       method: 'GET',
       credentials: 'include',
       headers: {
@@ -41,7 +41,7 @@ export async function PUT(request, { params }) {
     const { locale, id } = await params;
     const body = await request.json();
 
-    const response = await fetch(`${API_CONFIG.BASE_URL}/collections/${locale}/${id}`, {
+    const response = await fetch(`${API_CONFIG.BASE_URL}/api/collections/${locale}/${id}`, {
       method: 'PUT',
       credentials: 'include',
       headers: {
@@ -76,7 +76,7 @@ export async function DELETE(request, { params }) {
   try {
     const { locale, id } = await params;
 
-    const response = await fetch(`${API_CONFIG.BASE_URL}/collections/${locale}/${id}`, {
+    const response = await fetch(`${API_CONFIG.BASE_URL}/api/collections/${locale}/${id}`, {
       method: 'DELETE',
       credentials: 'include',
       headers: {
