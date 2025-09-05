@@ -1,4 +1,6 @@
 import React from 'react';
+import Image from 'next/image';
+import { API_CONFIG } from '@/lib/config';
 import { formatDate, formatMoney, cn } from '@/lib/utils';
 import styles from './CollectionCard.module.css';
 
@@ -26,14 +28,22 @@ const CollectionCard = ({ collection }) => {
 
         <div className={styles.images}>
           {collection.image &&
-            collection.image.map(img => (
-              <img
-                key={img._id}
-                src={img.url}
-                alt={collection.alt}
-                className={styles.collectionImage}
-              />
-            ))}
+            collection.image.map(img => {
+              const imageName = img.url.split('/').pop();
+
+              return (
+                <Image
+                  key={img._id}
+                  src={`${API_CONFIG.BASE_URL}/images/all/${imageName}`}
+                  alt={collection.alt}
+                  className={styles.collectionImage}
+                  width={300}
+                  height={200}
+                  priority={false}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+              );
+            })}
         </div>
 
         <div className={styles.stats}>
@@ -55,9 +65,7 @@ const CollectionCard = ({ collection }) => {
                 style={{ width: `${(collection.collected / collection.target) * 100}%` }}
               />
             </div>
-            <span className={styles.progressText}>
-              {Math.round(progress)}%
-            </span>
+            <span className={styles.progressText}>{Math.round(progress)}%</span>
           </div>
         </div>
 

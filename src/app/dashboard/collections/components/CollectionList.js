@@ -7,6 +7,7 @@ import Table from '@/components/ui/Table';
 import Button from '@/components/ui/Button';
 import { formatDate, formatMoney, cn } from '@/lib/utils';
 import styles from './CollectionList.module.css';
+import { PencilIcon, TrashIcon } from '@heroicons/react/outline';
 
 const CollectionList = ({ locale = 'ua' }) => {
   const router = useRouter();
@@ -56,9 +57,9 @@ const CollectionList = ({ locale = 'ua' }) => {
       key: 'title',
       label: 'Назва',
       render: (value, row) => (
-        <div className={styles.titleCell}>
+        <div className={styles.titleCell} onClick={() => router.push(`${BASE_ROUTE}/${row.id}`)}>
           <strong>{value}</strong>
-          <span className={styles.description}>{row.description}</span>
+       
         </div>
       ),
     },
@@ -93,17 +94,20 @@ const CollectionList = ({ locale = 'ua' }) => {
         <div className={styles.actions}>
           <Button
             size="small"
-            variant="outline"
-             onClick={() => router.push(`${BASE_ROUTE}/${row.id}`)}
-          >
-            Переглянути
-          </Button>
-          <Button
-            size="small"
             variant="secondary"
             onClick={() => router.push(`${BASE_ROUTE}/edit/${row.id}`)}
+            className={styles.iconButton}
           >
-            Редагувати
+            <PencilIcon className={styles.icon} />
+          </Button>
+
+           <Button
+            size="small"
+            variant="danger"
+            onClick={() => handleDelete(row.id)}
+            className={styles.iconButton}
+          >
+            <TrashIcon className={styles.icon} />
           </Button>
         </div>
       ),
@@ -135,7 +139,7 @@ const CollectionList = ({ locale = 'ua' }) => {
       <Table
         columns={columns}
         data={collections}
-        onRowClick={row => console.log('Row clicked:', row)}
+        onRowClick={row => router.push(`${BASE_ROUTE}/${row.id}`)}
       />
 
       {collections.length === 0 && !loading && (

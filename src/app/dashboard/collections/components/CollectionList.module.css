@@ -110,3 +110,15 @@
   border-radius: 8px;
   margin: 16px 0;
 }
+
+.iconButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px;
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+}
