@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function DashboardHome() {
   return (
     <div>
@@ -6,9 +8,12 @@ export default function DashboardHome() {
       </h1>
       <p style={{ fontSize: '16px', color: '#374151' }}>
         Перейдіть на{' '}
-        <a href="/dashboard/collections" style={{ color: '#2563eb', textDecoration: 'underline' }}>
+        <Link
+          href="/dashboard/collections"
+          style={{ color: '#2563eb', textDecoration: 'underline' }}
+        >
           Збори коштів
-        </a>
+        </Link>
       </p>
     </div>
   );
