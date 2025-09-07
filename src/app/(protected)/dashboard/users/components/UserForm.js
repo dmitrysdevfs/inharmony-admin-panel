@@ -136,7 +136,7 @@ const UserForm = () => {
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.field}>
           <label htmlFor="name" className={styles.label}>
-            Ім'я *
+            Ім&apos;я *
           </label>
           <Input
             id="name"

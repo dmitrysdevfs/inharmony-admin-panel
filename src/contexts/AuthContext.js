@@ -27,9 +27,7 @@ export const AuthProvider = ({ children }) => {
         setLoading(true);
         const response = await fetchCurrentUser();
         setUser(response.data);
-        console.log('✅ AuthContext: User authenticated:', response.data);
       } catch (error) {
-        console.log('❌ AuthContext: User not authenticated, clearing cookies');
         setUser(null);
 
         // Clear invalid cookies
@@ -55,10 +53,8 @@ export const AuthProvider = ({ children }) => {
       // Fetch user data after successful login
       const userResponse = await fetchCurrentUser();
       setUser(userResponse.data);
-      console.log('✅ AuthContext: User logged in:', userResponse.data);
       return { success: true };
     } catch (error) {
-      console.error('❌ AuthContext: Login failed:', error);
       setUser(null);
       throw error;
     } finally {
@@ -70,25 +66,10 @@ export const AuthProvider = ({ children }) => {
     try {
       await logoutService();
       setUser(null);
-      console.log('✅ AuthContext: User logged out');
-
-      // Clear cookies
-      if (typeof document !== 'undefined') {
-        document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-        document.cookie = 'refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-      }
-
       router.push('/auth/login');
     } catch (error) {
-      console.error('❌ AuthContext: Logout error:', error);
+      // Even if logout service fails, clear user state and redirect
       setUser(null);
-
-      // Clear cookies even if logout service fails
-      if (typeof document !== 'undefined') {
-        document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-        document.cookie = 'refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-      }
-
       router.push('/auth/login');
     }
   };
