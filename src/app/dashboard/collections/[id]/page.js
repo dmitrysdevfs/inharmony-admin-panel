@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import CollectionCard from '../components/CollectionCard';
 import Button from '@/components/ui/Button';
+import { adaptCollection } from '@/lib/adapters';
 import styles from './CollectionPage.module.css';
 
 export default function CollectionPage() {
@@ -24,7 +25,8 @@ export default function CollectionPage() {
           throw new Error(`Failed to fetch collection: ${res.status}`);
         }
         const data = await res.json();
-        setCollection(data.data);
+        const adaptedCollection = adaptCollection(data.data);
+        setCollection(adaptedCollection);
       } catch (err) {
         setError(err.message);
       } finally {

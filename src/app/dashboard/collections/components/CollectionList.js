@@ -59,7 +59,6 @@ const CollectionList = ({ locale = 'ua' }) => {
       render: (value, row) => (
         <div className={styles.titleCell} onClick={() => router.push(`${BASE_ROUTE}/${row.id}`)}>
           <strong>{value}</strong>
-       
         </div>
       ),
     },
@@ -101,7 +100,7 @@ const CollectionList = ({ locale = 'ua' }) => {
             <PencilIcon className={styles.icon} />
           </Button>
 
-           <Button
+          <Button
             size="small"
             variant="danger"
             onClick={() => handleDelete(row.id)}
@@ -131,7 +130,7 @@ const CollectionList = ({ locale = 'ua' }) => {
 
       {fallback && (
         <div className={styles.fallbackWarning}>
-          ⚠️ Використовуються тестові дані
+          Використовуються тестові дані
           {fallbackReason && <span className={styles.fallbackReason}> ({fallbackReason})</span>}
         </div>
       )}

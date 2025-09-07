@@ -30,7 +30,7 @@ export const useAuth = () => {
     return result;
   }, []);
 
-  // 🚪 Логаут
+  // Logout
   const handleLogout = useCallback(async () => {
     const result = await logout();
     if (result.success) {

@@ -1,17 +1,20 @@
 import { API_CONFIG } from '@/lib/config';
 import { NextResponse } from 'next/server';
 
-// Отримання конкретного збору
+// Get specific collection
 export async function GET(request, { params }) {
   try {
     const { locale, id } = await params;
 
+    // Forward cookies from the original request
+    const cookieHeader = request.headers.get('cookie');
+
     const response = await fetch(`${API_CONFIG.BASE_URL}/api/collections/${locale}/${id}`, {
       method: 'GET',
-      credentials: 'include',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
+        ...(cookieHeader ? { Cookie: cookieHeader } : {}),
       },
     });
 
@@ -35,18 +38,21 @@ export async function GET(request, { params }) {
   }
 }
 
-// Оновлення збору
+// Update collection
 export async function PUT(request, { params }) {
   try {
     const { locale, id } = await params;
     const body = await request.json();
 
+    // Forward cookies from the original request
+    const cookieHeader = request.headers.get('cookie');
+
     const response = await fetch(`${API_CONFIG.BASE_URL}/api/collections/${locale}/${id}`, {
       method: 'PUT',
-      credentials: 'include',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
+        ...(cookieHeader ? { Cookie: cookieHeader } : {}),
       },
       body: JSON.stringify(body),
     });
@@ -71,17 +77,20 @@ export async function PUT(request, { params }) {
   }
 }
 
-// Видалення збору
+// Delete collection
 export async function DELETE(request, { params }) {
   try {
     const { locale, id } = await params;
 
+    // Forward cookies from the original request
+    const cookieHeader = request.headers.get('cookie');
+
     const response = await fetch(`${API_CONFIG.BASE_URL}/api/collections/${locale}/${id}`, {
       method: 'DELETE',
-      credentials: 'include',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
+        ...(cookieHeader ? { Cookie: cookieHeader } : {}),
       },
     });
 
