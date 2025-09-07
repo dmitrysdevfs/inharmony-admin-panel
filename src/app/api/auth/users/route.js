@@ -1,0 +1,35 @@
+import { NextResponse } from 'next/server';
+import { API_CONFIG } from '@/lib/config';
+
+export async function GET(request) {
+  try {
+    const cookieHeader = request.headers.get('cookie');
+
+    const response = await fetch(`${API_CONFIG.BASE_URL}/api/auth/users`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        Cookie: cookieHeader || '',
+      },
+      credentials: 'include',
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      return NextResponse.json(data, {
+        status: response.status,
+      });
+    } else {
+      return NextResponse.json(
+        { error: 'Failed to fetch users', details: data },
+        { status: response.status }
+      );
+    }
+  } catch (error) {
+    return NextResponse.json(
+      { error: 'Internal server error', message: error.message },
+      { status: 500 }
+    );
+  }
+}

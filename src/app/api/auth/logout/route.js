@@ -3,42 +3,55 @@ import { API_CONFIG } from '@/lib/config';
 
 export async function POST(request) {
   try {
-    // TODO: ВИРІШИТИ ПРОБЛЕМУ З COOKIES
-    // Проблема: cookies не передаються до API роуту через SameSite=None + Secure
-    // Рішення: або перейти на HTTPS, або змінити налаштування cookies на зовнішньому API
-    //
-    // Коли проблема буде вирішена, розкоментувати код нижче:
-    /*
     const cookieHeader = request.headers.get('cookie');
 
     const response = await fetch(`${API_CONFIG.BASE_URL}/api/auth/logout`, {
       method: 'POST',
-      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
+        Cookie: cookieHeader || '',
       },
+      credentials: 'include',
     });
 
+    const setCookieHeader = response.headers.get('set-cookie');
+    const data = await response.json().catch(() => ({}));
 
-    const data = await response.json();
+    const responseOptions = {
+      status: response.status,
+    };
 
-    if (response.ok || response.status === 204) {
-      return NextResponse.json({ success: true }, { status: 200 });
+    if (setCookieHeader) {
+      responseOptions.headers = {
+        'Set-Cookie': setCookieHeader,
+      };
+    } else {
+      responseOptions.headers = {
+        'Set-Cookie': [
+          'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; HttpOnly; Secure; SameSite=None',
+          'refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; HttpOnly; Secure; SameSite=None',
+        ],
+      };
     }
 
-    return NextResponse.json(
-      { error: 'Logout failed', details: data },
-      { status: response.status }
-    );
-    */
+    if (response.ok || response.status === 204) {
+      return NextResponse.json({ success: true }, responseOptions);
+    }
 
-    // Temporary solution: local logout
-    return NextResponse.json({ success: true, message: 'Local logout successful' });
+    return NextResponse.json({ error: 'Logout failed', details: data }, responseOptions);
   } catch (error) {
     return NextResponse.json(
-      { error: 'Internal server error', message: error.message },
-      { status: 500 }
+      { success: true, message: 'Local logout successful' },
+      {
+        status: 200,
+        headers: {
+          'Set-Cookie': [
+            'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; HttpOnly; Secure; SameSite=None',
+            'refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; HttpOnly; Secure; SameSite=None',
+          ],
+        },
+      }
     );
   }
 }

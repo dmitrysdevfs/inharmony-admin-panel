@@ -3,10 +3,11 @@
 import styles from './LoginForm.module.css';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
-import { login } from '@/services/authService';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function LoginForm() {
   const router = useRouter();
+  const { login: setUser } = useAuth();
   const {
     register,
     handleSubmit,
@@ -15,15 +16,13 @@ export default function LoginForm() {
   } = useForm();
 
   const handleLogin = async data => {
-    const res = await login(data.email, data.password);
-
-    if (res.success) {
-      // Дані користувача автоматично зберігаються в authService.login
+    try {
+      await setUser({ email: data.email, password: data.password });
       router.push('/dashboard');
-    } else {
+    } catch (error) {
       setFormError('root', {
         type: 'manual',
-        message: res.reason || 'Невірні дані для входу',
+        message: error.message || 'Невірні дані для входу',
       });
     }
   };

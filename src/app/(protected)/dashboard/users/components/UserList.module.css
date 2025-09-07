@@ -1,0 +1,136 @@
+.container {
+  padding: 24px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 48px;
+  font-size: 16px;
+  color: #6b7280;
+}
+
+.error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 48px;
+  font-size: 16px;
+  color: #dc2626;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  margin: 24px;
+}
+
+.nameCell {
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.emailCell {
+  color: #6b7280;
+  font-family: monospace;
+}
+
+.role {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.role.admin {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.role.editor {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.iconButton {
+  padding: 6px;
+  min-width: auto;
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 48px;
+  color: #6b7280;
+  font-size: 16px;
+}
+
+.userList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.userItem {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.userItem:hover {
+  background-color: #f9fafb;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.userInfo p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.selectedUser {
+  margin-top: 24px;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background-color: #f9fafb;
+}
+
+.selectedUser h3 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+}
