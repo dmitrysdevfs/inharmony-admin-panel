@@ -26,7 +26,17 @@ export const fetchUsers = async () => {
     credentials: 'include',
   });
   const data = await handleResponse(res);
-  return { data: data.data || data.users || [] };
+
+  // Normalize response to always return an array
+  if (Array.isArray(data)) {
+    return data;
+  } else if (data && Array.isArray(data.data)) {
+    return data.data;
+  } else if (data && Array.isArray(data.users)) {
+    return data.users;
+  } else {
+    return [];
+  }
 };
 
 // Get current user profile

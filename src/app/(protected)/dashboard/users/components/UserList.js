@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuthGuard } from '@/hooks/useAuthGuard';
 import { fetchUsers } from '@/services/userService';
 import UserProfile from './UserProfile';
+import styles from './UserList.module.css';
 
 const UserList = () => {
   const { isAuthorized, isChecking, user } = useAuthGuard('admin');
@@ -24,8 +25,8 @@ const UserList = () => {
           return;
         }
 
-        const usersResponse = await fetchUsers();
-        setUsers(usersResponse.data);
+        const usersArray = await fetchUsers();
+        setUsers(usersArray);
       } catch (err) {
         setError(`Помилка: ${err.message}`);
       } finally {
@@ -33,10 +34,10 @@ const UserList = () => {
       }
     };
 
-    if (!isChecking) {
+    if (!isChecking && isAuthorized) {
       fetchData();
     }
-  }, [isAuthorized, isChecking, user]);
+  }, [isChecking, isAuthorized]);
 
   const handleSelect = user => {
     setSelectedUser(user);
@@ -44,45 +45,55 @@ const UserList = () => {
 
   if (isChecking || loading) {
     return (
-      <div className="p-6">
-        <h1 className="text-2xl font-bold mb-4">Користувачі</h1>
-        <p>Завантаження...</p>
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <h2>Користувачі</h2>
+        </div>
+        <div className={styles.loading}>Завантаження...</div>
       </div>
     );
   }
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Користувачі</h1>
-      {error && <p className="text-red-500">{error}</p>}
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h2>Користувачі</h2>
+      </div>
 
-      {users.length === 0 && !error && (
-        <p className="text-gray-500">Немає користувачів для відображення</p>
+      {error && <div className={styles.error}>{error}</div>}
+
+      {users.length > 0 ? (
+        <ul className={styles.userList}>
+          {users.map((user, index) => (
+            <li
+              key={user._id || index}
+              className={styles.userItem}
+              onClick={() => handleSelect(user)}
+            >
+              <div className={styles.userInfo}>
+                <p className={styles.nameCell}>
+                  <strong>Ім&apos;я:</strong> {user.name || 'Без імені'}
+                </p>
+                <p className={styles.emailCell}>
+                  <strong>Email:</strong> {user.email || 'Без email'}
+                </p>
+                <p>
+                  <strong>Роль:</strong>
+                  <span className={`${styles.role} ${styles[user.role]}`}>
+                    {user.role === 'admin' ? 'Адміністратор' : 'Редактор'}
+                  </span>
+                </p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div className={styles.emptyState}>Немає користувачів для відображення</div>
       )}
 
-      <ul className="space-y-2">
-        {users.map(user => (
-          <li
-            key={user._id}
-            className="border p-4 rounded-md hover:bg-gray-50 cursor-pointer"
-            onClick={() => handleSelect(user)}
-          >
-            <p>
-              <strong>Ім&apos;я:</strong> {user.name || 'Без імені'}
-            </p>
-            <p>
-              <strong>Email:</strong> {user.email}
-            </p>
-            <p>
-              <strong>Роль:</strong> {user.role === 'admin' ? 'Адміністратор' : 'Редактор'}
-            </p>
-          </li>
-        ))}
-      </ul>
-
       {selectedUser && (
-        <div className="mt-6">
-          <h2 className="text-xl font-semibold mb-2">Профіль користувача</h2>
+        <div className={styles.selectedUser}>
+          <h3>Профіль користувача</h3>
           <UserProfile user={selectedUser} isEditable={true} />
         </div>
       )}
