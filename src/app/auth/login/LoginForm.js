@@ -3,10 +3,12 @@
 import styles from './LoginForm.module.css';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 import { login } from '@/services/authService';
 
 export default function LoginForm() {
   const router = useRouter();
+  const { login: setUser } = useAuth();
   const {
     register,
     handleSubmit,
@@ -15,15 +17,31 @@ export default function LoginForm() {
   } = useForm();
 
   const handleLogin = async data => {
-    const res = await login(data.email, data.password);
+    try {
+      console.log('🔐 LoginForm: Attempting login...');
+      const res = await login({ email: data.email, password: data.password });
+      console.log('✅ LoginForm: Login successful');
 
-    if (res.success) {
-      // Дані користувача автоматично зберігаються в authService.login
-      router.push('/dashboard');
-    } else {
+      // Get current user data after successful login
+      const { fetchCurrentUser } = await import('@/services/userService');
+      const userResponse = await fetchCurrentUser();
+      const userData = userResponse.data;
+
+      console.log('👤 LoginForm: User data:', userData);
+
+      // Set user in context
+      setUser(userData);
+
+      // Small delay to ensure context is updated, then redirect
+      setTimeout(() => {
+        router.push('/dashboard');
+        console.log('🚀 LoginForm: Redirected to dashboard');
+      }, 100);
+    } catch (error) {
+      console.error('❌ LoginForm: Login failed:', error);
       setFormError('root', {
         type: 'manual',
-        message: res.reason || 'Невірні дані для входу',
+        message: error.message || 'Невірні дані для входу',
       });
     }
   };

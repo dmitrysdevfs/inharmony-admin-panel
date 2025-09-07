@@ -1,51 +1,24 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { getCurrentUser, logout } from '@/services/authService';
+import { useAuth } from '@/contexts/AuthContext';
 import Button from '@/components/ui/Button';
 import styles from './DashboardLayout.module.css';
 
 export default function DashboardLayout({ children }) {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { user, loading, logout, isAdmin } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        setLoading(true);
-        const res = await getCurrentUser();
-        if (res.success) {
-          setUser(res.data);
-        } else {
-          // Якщо користувача немає — перенаправляємо на логін
-          router.push('/auth/login');
-        }
-      } catch (error) {
-        router.push('/auth/login');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUser();
-  }, [router]);
-
   const handleLogout = async () => {
-    const res = await logout();
-    if (res.success) {
-      // localStorage автоматично очищається в logout функції
-      router.push('/auth/login');
-    } else {
-    }
+    await logout();
   };
 
   const navigation = [
     { name: 'Збори', href: '/dashboard/collections', icon: '📊' },
     { name: 'Звіти', href: '/dashboard/reports', icon: '📈' },
-    { name: 'Користувачі', href: '/dashboard/users', icon: '👥' },
+    ...(isAdmin ? [{ name: 'Користувачі', href: '/dashboard/users', icon: '👥' }] : []),
+    { name: 'Профіль', href: '/dashboard/users/profile', icon: '👤' },
     { name: 'Налаштування', href: '/dashboard/settings', icon: '⚙️' },
   ];
 

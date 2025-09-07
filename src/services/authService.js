@@ -1,50 +1,95 @@
-import { fetchJson } from '../lib/fetchJson';
+const BASE_URL = '/api/auth';
 
-const USER_KEY = 'inharmony_user';
+export const login = async credentials => {
+  console.log('🔐 Attempting login with:', { email: credentials.email });
 
-// 🔑 Логін
-export const login = async (email, password) => {
-  try {
-    const responseData = await fetchJson('/api/auth/login', {
-      method: 'POST',
-      body: JSON.stringify({ email, password }),
-    });
+  const res = await fetch(`${BASE_URL}/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(credentials),
+    credentials: 'include',
+  });
 
-    const userData = responseData.data ||
-      responseData.user || {
-        name: email.split('@')[0],
-        email,
-        role: 'admin',
-        id: Date.now(),
-      };
+  console.log('📡 Login response status:', res.status);
 
-    localStorage.setItem(USER_KEY, JSON.stringify(userData));
-    return { success: true, data: userData };
-  } catch (error) {
-    return { success: false, reason: error.message };
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    console.error('❌ Login failed:', errorData);
+    throw new Error(errorData.message || 'Login failed');
   }
+
+  const data = await res.json();
+  console.log('✅ Login successful:', data);
+  return data;
 };
 
-// Logout
 export const logout = async () => {
-  try {
-    await fetchJson('/api/auth/logout', { method: 'POST' });
-    localStorage.removeItem(USER_KEY);
-    return { success: true };
-  } catch (error) {
-    return { success: false, reason: error.message };
-  }
+  const res = await fetch(`${BASE_URL}/logout`, {
+    method: 'POST',
+    credentials: 'include',
+  });
+  if (!res.ok) throw new Error('Logout failed');
 };
 
-// Get current user
-export const getCurrentUser = () => {
-  try {
-    const storedUser = localStorage.getItem(USER_KEY);
-    if (storedUser) {
-      return { success: true, data: JSON.parse(storedUser) };
-    }
-    return { success: false, data: null, reason: 'Користувач не знайдений у localStorage' };
-  } catch (error) {
-    return { success: false, data: null, reason: `Помилка читання localStorage: ${error.message}` };
+export const getCurrentUser = async () => {
+  console.log('👤 Fetching current user...');
+
+  const res = await fetch(`${BASE_URL}/users/current`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  console.log('📡 Current user response status:', res.status);
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    console.error('❌ Failed to fetch current user:', errorData);
+    throw new Error(errorData.message || 'Failed to fetch current user');
   }
+
+  const data = await res.json();
+  console.log('✅ Current user data:', data);
+  return data;
+};
+
+export const getUsers = async () => {
+  const res = await fetch(`${BASE_URL}/users`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+  if (!res.ok) throw new Error('Failed to fetch users');
+  return await res.json();
+};
+
+export const registerUser = async userData => {
+  const res = await fetch(`${BASE_URL}/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(userData),
+    credentials: 'include',
+  });
+  if (!res.ok) {
+    const error = await res.json();
+    throw new Error(error.message || 'Registration failed');
+  }
+  return await res.json();
+};
+
+export const updateUser = async (userId, updates) => {
+  const res = await fetch(`${BASE_URL}/users/${userId}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(updates),
+    credentials: 'include',
+  });
+  if (!res.ok) throw new Error('Failed to update user');
+  return await res.json();
+};
+
+export const deleteUser = async userId => {
+  const res = await fetch(`${BASE_URL}/users/${userId}`, {
+    method: 'DELETE',
+    credentials: 'include',
+  });
+  if (!res.ok) throw new Error('Failed to delete user');
 };
