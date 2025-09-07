@@ -20,12 +20,10 @@ export default function DashboardLayout({ children }) {
         if (res.success) {
           setUser(res.data);
         } else {
-          console.warn('⚠️ Не вдалося отримати користувача:', res.reason);
           // Якщо користувача немає — перенаправляємо на логін
           router.push('/auth/login');
         }
       } catch (error) {
-        console.error('❌ Помилка при отриманні користувача:', error);
         router.push('/auth/login');
       } finally {
         setLoading(false);
@@ -41,7 +39,6 @@ export default function DashboardLayout({ children }) {
       // localStorage автоматично очищається в logout функції
       router.push('/auth/login');
     } else {
-      console.error('❌ Помилка при виході:', res.reason);
     }
   };
 

@@ -1,14 +1,30 @@
 import { adaptCollection } from '../lib/adapters';
 
 const handleResponse = async response => {
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data?.error || data?.details || `Request failed: ${response.statusText}`);
+  let data;
+
+  try {
+    // Try to parse JSON response
+    const text = await response.text();
+    data = text ? JSON.parse(text) : {};
+  } catch (error) {
+    // If JSON parsing fails, create error object
+    data = {
+      error: 'Invalid JSON response',
+      details: `Server returned non-JSON response: ${response.statusText}`,
+    };
   }
+
+  if (!response.ok) {
+    const errorMessage =
+      data?.error || data?.details || data?.message || `Request failed: ${response.statusText}`;
+    throw new Error(errorMessage);
+  }
+
   return data;
 };
 
-// 🔍 Отримати список зборів
+// Get collections list
 export const fetchCollections = async (locale = 'ua', page = 1, limit = 10) => {
   const res = await fetch(`/api/collections/${locale}`, {
     credentials: 'include',
@@ -27,7 +43,7 @@ export const fetchCollections = async (locale = 'ua', page = 1, limit = 10) => {
   };
 };
 
-// 📁 Отримати один збір
+// Get single collection
 export const fetchCollectionById = async (locale = 'ua', id) => {
   const res = await fetch(`/api/collections/${locale}/${id}`, {
     credentials: 'include',
@@ -36,7 +52,7 @@ export const fetchCollectionById = async (locale = 'ua', id) => {
   return { data: adaptCollection(data.data) };
 };
 
-// 🆕 Створити новий збір
+// Create new collection
 export const createCollection = async (locale = 'ua', payload) => {
   const res = await fetch(`/api/collections/${locale}/new`, {
     method: 'POST',
@@ -44,11 +60,14 @@ export const createCollection = async (locale = 'ua', payload) => {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   });
+
   const data = await handleResponse(res);
-  return { data: adaptCollection(data.data) };
+
+  // API returns collection object directly, not wrapped in data
+  return { data: adaptCollection(data) };
 };
 
-// ✏️ Отримати збір для редагування
+// Get collection for editing
 export const fetchCollectionForEdit = async (locale = 'ua', id) => {
   const res = await fetch(`/api/collections/${locale}/edit/${id}`, {
     credentials: 'include',
@@ -57,7 +76,7 @@ export const fetchCollectionForEdit = async (locale = 'ua', id) => {
   return { data: adaptCollection(data.data) };
 };
 
-// 🔄 Оновити збір
+// Update collection
 export const updateCollectionViaEdit = async (locale = 'ua', id, payload) => {
   const res = await fetch(`/api/collections/${locale}/edit/${id}`, {
     method: 'PUT',
@@ -69,7 +88,7 @@ export const updateCollectionViaEdit = async (locale = 'ua', id, payload) => {
   return { data: adaptCollection(data.data) };
 };
 
-// 🗑️ Видалити збір
+// Delete collection
 export const deleteCollection = async (locale = 'ua', id) => {
   const res = await fetch(`/api/collections/${locale}/${id}`, {
     method: 'DELETE',

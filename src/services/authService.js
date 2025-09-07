@@ -21,24 +21,22 @@ export const login = async (email, password) => {
     localStorage.setItem(USER_KEY, JSON.stringify(userData));
     return { success: true, data: userData };
   } catch (error) {
-    console.error('❌ login:', error);
     return { success: false, reason: error.message };
   }
 };
 
-// 🚪 Логаут
+// Logout
 export const logout = async () => {
   try {
     await fetchJson('/api/auth/logout', { method: 'POST' });
     localStorage.removeItem(USER_KEY);
     return { success: true };
   } catch (error) {
-    console.error('❌ logout:', error);
     return { success: false, reason: error.message };
   }
 };
 
-// 👤 Отримати поточного користувача
+// Get current user
 export const getCurrentUser = () => {
   try {
     const storedUser = localStorage.getItem(USER_KEY);

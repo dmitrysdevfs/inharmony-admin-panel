@@ -16,18 +16,14 @@ export default function NewCollectionPage() {
       setLoading(true);
       setError('');
 
-      console.log('🆕 Створюємо новий збір:', data);
-
       const result = await createCollection('ua', data);
 
       if (result.data) {
-        console.log('✅ Збір створено успішно:', result.data);
         router.push('/dashboard/collections');
       } else {
         setError('Помилка створення збору');
       }
     } catch (error) {
-      console.error('❌ Помилка створення збору:', error);
       setError(error.message || 'Помилка створення збору');
     } finally {
       setLoading(false);

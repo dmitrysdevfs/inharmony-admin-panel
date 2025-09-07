@@ -5,20 +5,23 @@ export async function GET(request, { params }) {
   try {
     const { locale } = await params;
 
-    // Перенаправляємо запит до InHarmony API
+    // Forward cookies from the original request
+    const cookieHeader = request.headers.get('cookie');
+
+    // Forward request to InHarmony API
     const response = await fetch(`${API_CONFIG.BASE_URL}/api/collections/${locale}`, {
       method: 'GET',
-      credentials: 'include',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
+        ...(cookieHeader ? { Cookie: cookieHeader } : {}),
       },
     });
 
     const data = await response.json();
 
     if (response.ok) {
-      // Повертаємо дані з правильними заголовками
+      // Return data with proper headers
       const responseHeaders = {
         'Content-Type': 'application/json',
         'Cache-Control': 'no-cache',
@@ -29,7 +32,7 @@ export async function GET(request, { params }) {
         headers: responseHeaders,
       });
     } else {
-      // Помилка отримання даних
+      // Error fetching data
       return NextResponse.json(
         { error: 'Failed to fetch collections', details: data },
         { status: response.status }
