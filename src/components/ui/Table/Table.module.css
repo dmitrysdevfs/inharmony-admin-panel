@@ -16,6 +16,16 @@
   color: #374151;
 }
 
+/* Вирівнювання заголовків для числових колонок */
+.th:nth-child(2), /* Статус */
+.th:nth-child(3), /* Заповнено */
+.th:nth-child(4), /* Зібрано */
+.th:nth-child(5), /* Ціль */
+.th:nth-child(6) {
+  /* Донори */
+  text-align: center;
+}
+
 .td {
   padding: 12px 16px;
   color: #374151;
@@ -62,12 +72,12 @@
   color: #6b7280;
   font-style: italic;
 }
-.td:nth-child(2),
-.td:nth-child(3) {
-  text-align: right;
+/* Вирівнювання даних для числових колонок */
+.td:nth-child(2), /* Статус */
+.td:nth-child(3), /* Заповнено */
+.td:nth-child(4), /* Зібрано */
+.td:nth-child(5), /* Ціль */
+.td:nth-child(6) {
+  /* Донори */
+  text-align: center;
 }
-
-.td:nth-child(4) {
-  text-align: center; 
-}
-

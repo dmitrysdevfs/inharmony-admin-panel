@@ -53,20 +53,57 @@ const CollectionList = ({ locale = 'ua' }) => {
     loadCollections();
   }, [loadCollections]);
 
+  const handleDelete = async id => {
+    if (confirm('Ви впевнені, що хочете видалити цей збір?')) {
+      try {
+        // TODO: Implement delete functionality
+        console.log('Delete collection:', id);
+        // await deleteCollection(locale, id);
+        // loadCollections();
+      } catch (error) {
+        console.error('Error deleting collection:', error);
+      }
+    }
+  };
+
   const columns = [
     {
       key: 'title',
-      label: 'Назва',
-      render: (value, row) => (
-        <div className={styles.titleCell} onClick={() => router.push(`${BASE_ROUTE}/${row.id}`)}>
-          <strong>{value}</strong>
-        </div>
+      label: 'Назва і дата збору',
+      render: (value, row) => {
+        const truncatedTitle = value && value.length > 30 ? `${value.substring(0, 30)}...` : value;
+        const formattedDate = formatDate(row.createdAt, 'dd-MM.yyyy');
+
+        return (
+          <div className={styles.titleCell} onClick={() => router.push(`${BASE_ROUTE}/${row.id}`)}>
+            <div className={styles.titleRow}>
+              <strong>{truncatedTitle}</strong>
+            </div>
+            <div className={styles.dateRow}>{formattedDate}</div>
+          </div>
+        );
+      },
+    },
+    {
+      key: 'status',
+      label: 'Статус',
+      render: value => (
+        <span className={cn(styles.status, styles[value])}>
+          {value === 'active' ? 'Активний' : 'Завершений'}
+        </span>
       ),
     },
     {
-      key: 'goal',
-      label: 'Ціль',
-      render: value => formatMoney(value),
+      key: 'progress',
+      label: 'Заповнено',
+      render: (_, row) => {
+        const percentage = row.target > 0 ? Math.round((row.raised / row.target) * 100) : 0;
+        return (
+          <div className={styles.progressCell}>
+            <span className={styles.percentage}>{percentage}%</span>
+          </div>
+        );
+      },
     },
     {
       key: 'raised',
@@ -74,18 +111,14 @@ const CollectionList = ({ locale = 'ua' }) => {
       render: value => formatMoney(value),
     },
     {
-      key: 'status',
-      label: 'Статус',
-      render: value => (
-        <span className={cn(styles.status, styles[value])}>
-          {value === 'active' ? 'Активний' : 'Завершено'}
-        </span>
-      ),
+      key: 'goal',
+      label: 'Ціль',
+      render: value => formatMoney(value),
     },
     {
-      key: 'createdAt',
-      label: 'Створено',
-      render: value => formatDate(value),
+      key: 'peopleDonate',
+      label: 'Донори',
+      render: value => value || 0,
     },
     {
       key: 'actions',
@@ -122,34 +155,32 @@ const CollectionList = ({ locale = 'ua' }) => {
 
   return (
     <div>
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h2>Збори коштів</h2>
-        <button className={styles.creationBtn} onClick={() => router.push(`${BASE_ROUTE}/new`)}>
-          Створити новий збір
-        </button>
-      </div>
-
-      {fallback && (
-        <div className={styles.fallbackWarning}>
-          Використовуються тестові дані
-          {fallbackReason && <span className={styles.fallbackReason}> ({fallbackReason})</span>}
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <h2>Збори коштів</h2>
+          <button className={styles.creationBtn} onClick={() => router.push(`${BASE_ROUTE}/new`)}>
+            Створити новий збір
+          </button>
         </div>
-      )}
 
-      <Table
-        columns={columns}
-        data={collections}
-        onRowClick={row => router.push(`${BASE_ROUTE}/${row.id}`)}
-      />
+        {fallback && (
+          <div className={styles.fallbackWarning}>
+            Використовуються тестові дані
+            {fallbackReason && <span className={styles.fallbackReason}> ({fallbackReason})</span>}
+          </div>
+        )}
 
-      {collections.length === 0 && !loading && (
-        <div className={styles.emptyState}>Немає зборів для відображення</div>
-      )}
+        <Table
+          columns={columns}
+          data={collections}
+          onRowClick={row => router.push(`${BASE_ROUTE}/${row.id}`)}
+        />
 
-      
-    </div>
-    {totalPages > 1 && (
+        {collections.length === 0 && !loading && (
+          <div className={styles.emptyState}>Немає зборів для відображення</div>
+        )}
+      </div>
+      {totalPages > 1 && (
         <div className={styles.pagination}>
           <button
             className={cn(styles.paginationButton, { [styles.disabled]: pagination.page === 1 })}
@@ -167,13 +198,14 @@ const CollectionList = ({ locale = 'ua' }) => {
                   [styles.active]: pagination.page === index + 1,
                 })}
                 onClick={() => setPagination(prev => ({ ...prev, page: index + 1 }))}
-              >
-              </button>
+              ></button>
             ))}
           </div>
 
           <button
-            className={cn(styles.paginationButton, { [styles.disabled]: pagination.page === totalPages })}
+            className={cn(styles.paginationButton, {
+              [styles.disabled]: pagination.page === totalPages,
+            })}
             disabled={pagination.page === totalPages}
             onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}
           >
@@ -181,7 +213,7 @@ const CollectionList = ({ locale = 'ua' }) => {
           </button>
         </div>
       )}
-      </div>
+    </div>
   );
 };
 
