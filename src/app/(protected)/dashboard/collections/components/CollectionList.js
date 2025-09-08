@@ -8,6 +8,7 @@ import Button from '@/components/ui/Button';
 import { formatDate, formatMoney, cn } from '@/lib/utils';
 import styles from './CollectionList.module.css';
 import { PencilIcon, TrashIcon } from '@heroicons/react/outline';
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/outline'; // Іконки для стрілочок
 
 const CollectionList = ({ locale = 'ua' }) => {
   const router = useRouter();
@@ -147,25 +148,34 @@ const CollectionList = ({ locale = 'ua' }) => {
 
       {totalPages > 1 && (
         <div className={styles.pagination}>
-          <Button
-            variant="outline"
+          <button
+            className={cn(styles.paginationButton, { [styles.disabled]: pagination.page === 1 })}
             disabled={pagination.page === 1}
             onClick={() => setPagination(prev => ({ ...prev, page: prev.page - 1 }))}
           >
-            Попередня
-          </Button>
+            <ChevronLeftIcon className={styles.iconArrow} />
+          </button>
 
-          <span className={styles.pageInfo}>
-            Сторінка {pagination.page} з {totalPages}
-          </span>
+          <div className={styles.pageDots}>
+            {Array.from({ length: totalPages }, (_, index) => (
+              <button
+                key={index}
+                className={cn(styles.pageDot, {
+                  [styles.active]: pagination.page === index + 1,
+                })}
+                onClick={() => setPagination(prev => ({ ...prev, page: index + 1 }))}
+              >
+              </button>
+            ))}
+          </div>
 
-          <Button
-            variant="outline"
+          <button
+            className={cn(styles.paginationButton, { [styles.disabled]: pagination.page === totalPages })}
             disabled={pagination.page === totalPages}
             onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}
           >
-            Наступна
-          </Button>
+            <ChevronRightIcon className={styles.iconArrow} />
+          </button>
         </div>
       )}
     </div>

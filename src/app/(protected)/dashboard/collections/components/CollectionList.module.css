@@ -1,5 +1,7 @@
 .container {
-  padding: 24px;
+  padding-top: 42px;
+  border-radius: 24px;
+  background: var(--ligtn-p-icon);
 }
 
 .header {
@@ -36,15 +38,21 @@
 .status {
   padding: 4px 8px;
   border-radius: 12px;
-  font-size: 12px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 157%;
+  color: var(--red);
+  background: var(--red-light);
 }
 
 .status.active {
-  background-color: #d1fae5;
-  color: #065f46;
+  background: var(--g-light);
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 157%;
+  color: var(--green);
 }
 
 .status.completed {
@@ -121,4 +129,69 @@
 .icon {
   width: 16px;
   height: 16px;
+}
+
+.paginationButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: color 0.3s ease;
+}
+
+.paginationButton:disabled {
+  cursor: not-allowed;
+  color: var(--purple);
+}
+
+.paginationButton:hover {
+  color: #710392;
+}
+
+.iconArrow {
+  width: 20px;
+  height: 20px;
+  transition: color 0.3s ease;
+}
+
+.paginationButton:not(:disabled):hover .iconArrow {
+  color: #710392;
+}
+
+.paginationButton:not(:disabled) .iconArrow {
+  color: red;
+}
+
+.paginationButton:not(:disabled) .iconArrow {
+  color: var(--btn);
+}
+
+.paginationButton.disabled .iconArrow {
+  color: var(--purple);
+}
+
+.pageDots {
+  display: flex;
+  gap: 8px;
+}
+
+.pageDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: none;
+  background: var(--purple);
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.pageDot.active {
+  background: var(--btn);
+}
+
+.pageDot:hover {
+  background: #710392;
 }
