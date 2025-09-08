@@ -23,7 +23,8 @@
 
 .td:nth-child(1) {
   width: 160px;
-  white-space: nowrap; 
+  white-space: nowrap;
+}
 .tr {
   position: relative;
 }
@@ -69,3 +70,4 @@
 .td:nth-child(4) {
   text-align: center; 
 }
+
