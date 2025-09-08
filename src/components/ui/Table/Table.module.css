@@ -20,6 +20,11 @@
   padding: 12px 16px;
   color: #374151;
 }
+
+.td:nth-child(1) {
+  width: 160px;
+  white-space: nowrap;
+}
 .tr {
   position: relative;
 }
@@ -57,3 +62,12 @@
   color: #6b7280;
   font-style: italic;
 }
+.td:nth-child(2),
+.td:nth-child(3) {
+  text-align: right;
+}
+
+.td:nth-child(4) {
+  text-align: center; 
+}
+

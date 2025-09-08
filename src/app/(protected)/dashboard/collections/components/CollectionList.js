@@ -121,12 +121,13 @@ const CollectionList = ({ locale = 'ua' }) => {
   }
 
   return (
+    <div>
     <div className={styles.container}>
       <div className={styles.header}>
         <h2>Збори коштів</h2>
-        <Button variant="primary" onClick={() => router.push(`${BASE_ROUTE}/new`)}>
+        <button className={styles.creationBtn} onClick={() => router.push(`${BASE_ROUTE}/new`)}>
           Створити новий збір
-        </Button>
+        </button>
       </div>
 
       {fallback && (
@@ -146,7 +147,9 @@ const CollectionList = ({ locale = 'ua' }) => {
         <div className={styles.emptyState}>Немає зборів для відображення</div>
       )}
 
-      {totalPages > 1 && (
+      
+    </div>
+    {totalPages > 1 && (
         <div className={styles.pagination}>
           <button
             className={cn(styles.paginationButton, { [styles.disabled]: pagination.page === 1 })}
@@ -178,7 +181,7 @@ const CollectionList = ({ locale = 'ua' }) => {
           </button>
         </div>
       )}
-    </div>
+      </div>
   );
 };
 
