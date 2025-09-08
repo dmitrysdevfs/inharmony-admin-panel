@@ -45,6 +45,9 @@ a {
   color: inherit;
   text-decoration: none;
 }
+button{
+  cursor: pointer;
+}
 
 /* Утиліти */
 .sr-only {
