@@ -39,21 +39,24 @@
   width: 230px;
   height: 44px;
   color: white;
-  padding: 14px 24px;
   border-radius: 24px;
   font-weight: bold;
   font-size: 16px;
   cursor: pointer;
-  transition: background 0.5s ease;
+  transition: background 0.5s ease, transform 0.2s ease;
 }
 
 .button:hover {
-  background: rgba(45, 45, 45, 0.85);
+  background: #641794;
+}
+
+.button:active {
+  transform: scale(0.96);
 }
 
 .error {
   margin-top: 8px;
-  background: #e74c3c;
+  background: var(--error);
   color: white;
   padding: 10px 14px;
   border-radius: 6px;
