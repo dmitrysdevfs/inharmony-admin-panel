@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from '../../../lib/utils';
+import { cn } from '@/lib/utils';
 import styles from './Table.module.css';
 
 const Table = ({ columns = [], data = [], className, onRowClick }) => {
