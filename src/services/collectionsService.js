@@ -97,6 +97,12 @@ export const deleteCollection = async (locale = 'ua', id) => {
     method: 'DELETE',
     credentials: 'include',
   });
+
+  // For 204 No Content, return success without parsing JSON
+  if (res.status === 204) {
+    return { success: true };
+  }
+
   await handleResponse(res);
   return { success: true };
 };

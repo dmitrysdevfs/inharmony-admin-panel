@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { fetchCollections } from '@/services/collectionsService';
+import { fetchCollections, deleteCollection } from '@/services/collectionsService';
 import Table from '@/components/ui/Table';
 import Button from '@/components/ui/Button';
 import { formatDate, formatMoney, cn } from '@/lib/utils';
@@ -54,14 +54,14 @@ const CollectionList = ({ locale = 'ua' }) => {
   }, [loadCollections]);
 
   const handleDelete = async id => {
-    if (confirm('Ви впевнені, що хочете видалити цей збір?')) {
+    if (confirm('Ви впевнені, що хочете видалити цей збір? Цю дію неможливо скасувати.')) {
       try {
-        // TODO: Implement delete functionality
-        console.log('Delete collection:', id);
-        // await deleteCollection(locale, id);
-        // loadCollections();
+        await deleteCollection(locale, id);
+        loadCollections();
+        alert('Збір успішно видалено');
       } catch (error) {
         console.error('Error deleting collection:', error);
+        alert('Помилка при видаленні збору. Спробуйте ще раз.');
       }
     }
   };

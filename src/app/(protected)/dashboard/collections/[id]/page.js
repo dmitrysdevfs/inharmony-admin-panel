@@ -22,6 +22,11 @@ export default function CollectionPage() {
         const locale = 'ua';
         const res = await fetch(`/api/collections/${locale}/${id}`);
         if (!res.ok) {
+          if (res.status === 404) {
+            // Collection not found, redirect to collections list
+            router.push('/dashboard/collections');
+            return;
+          }
           throw new Error(`Failed to fetch collection: ${res.status}`);
         }
         const data = await res.json();
@@ -35,7 +40,7 @@ export default function CollectionPage() {
     }
 
     fetchData();
-  }, [id]);
+  }, [id, router]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
