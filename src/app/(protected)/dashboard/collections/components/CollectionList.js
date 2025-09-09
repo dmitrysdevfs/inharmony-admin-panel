@@ -16,7 +16,7 @@ const CollectionList = ({ locale = 'ua' }) => {
   // 🔧 Константа для базового роуту колекцій
   const BASE_ROUTE = '/dashboard/collections';
 
-  const [collections, setCollections] = useState([]);
+  const [allCollections, setAllCollections] = useState([]); // Всі збори
   const [loading, setLoading] = useState(true);
   const [fallback, setFallback] = useState(false);
   const [fallbackReason, setFallbackReason] = useState('');
@@ -25,6 +25,10 @@ const CollectionList = ({ locale = 'ua' }) => {
     limit: 6,
     total: 0,
   });
+  const [sortConfig, setSortConfig] = useState({
+    key: 'createdAt',
+    direction: 'desc', // По замовчуванню - новіші збори спочатку
+  });
 
   const loadCollections = useCallback(async () => {
     try {
@@ -32,9 +36,10 @@ const CollectionList = ({ locale = 'ua' }) => {
       setFallback(false);
       setFallbackReason('');
 
-      const response = await fetchCollections(locale, pagination.page, pagination.limit);
+      // Завантажуємо всі збори (perPage=50)
+      const response = await fetchCollections(locale, 1, 50);
 
-      setCollections(response.data || []);
+      setAllCollections(response.data || []);
       setFallback(response.fallback || false);
       setFallbackReason(response.reason || '');
       setPagination(prev => ({
@@ -47,7 +52,7 @@ const CollectionList = ({ locale = 'ua' }) => {
     } finally {
       setLoading(false);
     }
-  }, [locale, pagination.page, pagination.limit]);
+  }, [locale]);
 
   useEffect(() => {
     loadCollections();
@@ -66,10 +71,52 @@ const CollectionList = ({ locale = 'ua' }) => {
     }
   };
 
+  const handleSort = key => {
+    setSortConfig(prevConfig => ({
+      key,
+      direction: prevConfig.key === key && prevConfig.direction === 'asc' ? 'desc' : 'asc',
+    }));
+    // Скидаємо на першу сторінку при зміні сортування
+    setPagination(prev => ({ ...prev, page: 1 }));
+  };
+
+  const sortCollections = collections => {
+    if (!sortConfig.key) return collections;
+
+    return [...collections].sort((a, b) => {
+      let aValue = a[sortConfig.key];
+      let bValue = b[sortConfig.key];
+
+      // Для дат конвертуємо в Date об'єкти
+      if (sortConfig.key === 'createdAt') {
+        aValue = new Date(aValue);
+        bValue = new Date(bValue);
+      }
+
+      if (aValue < bValue) {
+        return sortConfig.direction === 'asc' ? -1 : 1;
+      }
+      if (aValue > bValue) {
+        return sortConfig.direction === 'asc' ? 1 : -1;
+      }
+      return 0;
+    });
+  };
+
+  // Отримуємо поточну сторінку з відсортованих даних
+  const getCurrentPageCollections = () => {
+    const sortedCollections = sortCollections(allCollections);
+    const startIndex = (pagination.page - 1) * pagination.limit;
+    const endIndex = startIndex + pagination.limit;
+    return sortedCollections.slice(startIndex, endIndex);
+  };
+
   const columns = [
     {
       key: 'title',
       label: 'Назва і дата збору',
+      sortable: true,
+      sortKey: 'createdAt', // Сортуємо по даті створення
       render: (value, row) => {
         const truncatedTitle = value && value.length > 30 ? `${value.substring(0, 30)}...` : value;
         const formattedDate = formatDate(row.createdAt, 'dd-MM.yyyy');
@@ -147,7 +194,7 @@ const CollectionList = ({ locale = 'ua' }) => {
     },
   ];
 
-  const totalPages = Math.ceil(pagination.total / pagination.limit);
+  const totalPages = Math.ceil(allCollections.length / pagination.limit);
 
   if (loading) {
     return <div className={styles.loading}>Завантаження...</div>;
@@ -172,11 +219,13 @@ const CollectionList = ({ locale = 'ua' }) => {
 
         <Table
           columns={columns}
-          data={collections}
+          data={getCurrentPageCollections()}
           onRowClick={row => router.push(`${BASE_ROUTE}/${row.id}`)}
+          onSort={handleSort}
+          sortConfig={sortConfig}
         />
 
-        {collections.length === 0 && !loading && (
+        {allCollections.length === 0 && !loading && (
           <div className={styles.emptyState}>Немає зборів для відображення</div>
         )}
       </div>

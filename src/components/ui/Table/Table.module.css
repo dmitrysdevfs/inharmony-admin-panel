@@ -16,14 +16,56 @@
   color: #374151;
 }
 
-/* Вирівнювання заголовків для числових колонок */
-.th:nth-child(2), /* Статус */
-.th:nth-child(3), /* Заповнено */
-.th:nth-child(4), /* Зібрано */
-.th:nth-child(5), /* Ціль */
-.th:nth-child(6) {
-  /* Донори */
-  text-align: center;
+.thContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* Вирівнювання для числових колонок */
+.th:nth-child(2) .thContent,
+.th:nth-child(3) .thContent,
+.th:nth-child(4) .thContent,
+.th:nth-child(5) .thContent,
+.th:nth-child(6) .thContent {
+  justify-content: center;
+}
+
+/* Для числових колонок без сортування - просто центруємо текст */
+.th:nth-child(2):not(.sortable) .thContent,
+.th:nth-child(3):not(.sortable) .thContent,
+.th:nth-child(4):not(.sortable) .thContent,
+.th:nth-child(5):not(.sortable) .thContent,
+.th:nth-child(6):not(.sortable) .thContent {
+  justify-content: center;
+}
+
+.sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+.sortable:hover {
+  background-color: rgba(139, 92, 246, 0.1);
+}
+
+.sortIcons {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sortIcon {
+  width: 12px;
+  height: 12px;
+  color: #9ca3af;
+  transition: color 0.2s ease;
+}
+
+.sortIcon.active {
+  color: #374151;
 }
 
 .td {
