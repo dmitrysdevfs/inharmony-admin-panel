@@ -8,15 +8,14 @@ import Button from '@/components/ui/Button';
 import { formatDate, formatMoney, cn } from '@/lib/utils';
 import styles from './CollectionList.module.css';
 import { PencilIcon, TrashIcon, SearchIcon, XIcon } from '@heroicons/react/outline';
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/outline'; // Іконки для стрілочок
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/outline';
 
 const CollectionList = ({ locale = 'ua' }) => {
   const router = useRouter();
 
-  // 🔧 Константа для базового роуту колекцій
   const BASE_ROUTE = '/dashboard/collections';
 
-  const [allCollections, setAllCollections] = useState([]); // Всі збори
+  const [allCollections, setAllCollections] = useState([]);
   const [loading, setLoading] = useState(true);
   const [fallback, setFallback] = useState(false);
   const [fallbackReason, setFallbackReason] = useState('');
@@ -27,12 +26,11 @@ const CollectionList = ({ locale = 'ua' }) => {
   });
   const [sortConfig, setSortConfig] = useState({
     key: 'createdAt',
-    direction: 'desc', // По замовчуванню - новіші збори спочатку
+    direction: 'desc',
   });
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all'); // 'all', 'active', 'closed'
+  const [statusFilter, setStatusFilter] = useState('all');
 
-  // Перевірка на клієнтську сторону для уникнення проблем з гідратацією
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -45,7 +43,6 @@ const CollectionList = ({ locale = 'ua' }) => {
       setFallback(false);
       setFallbackReason('');
 
-      // Завантажуємо всі збори (perPage=50)
       const response = await fetchCollections(locale, 1, 50);
 
       setAllCollections(response.data || []);
@@ -74,7 +71,6 @@ const CollectionList = ({ locale = 'ua' }) => {
         loadCollections();
         alert('Збір успішно видалено');
       } catch (error) {
-        console.error('Error deleting collection:', error);
         alert('Помилка при видаленні збору. Спробуйте ще раз.');
       }
     }
@@ -85,13 +81,11 @@ const CollectionList = ({ locale = 'ua' }) => {
       key,
       direction: prevConfig.key === key && prevConfig.direction === 'asc' ? 'desc' : 'asc',
     }));
-    // Скидаємо на першу сторінку при зміні сортування
     setPagination(prev => ({ ...prev, page: 1 }));
   };
 
   const handleSearch = value => {
     setSearchTerm(value);
-    // Скидаємо на першу сторінку при пошуку
     setPagination(prev => ({ ...prev, page: 1 }));
   };
 
@@ -112,19 +106,16 @@ const CollectionList = ({ locale = 'ua' }) => {
       let aValue = a[sortConfig.key];
       let bValue = b[sortConfig.key];
 
-      // Для дат конвертуємо в Date об'єкти
       if (sortConfig.key === 'createdAt') {
         aValue = new Date(aValue);
         bValue = new Date(bValue);
       }
 
-      // Для обчисленого поля progress (відсоток заповнення)
       if (sortConfig.key === 'progress') {
         aValue = a.target > 0 ? Math.round((a.raised / a.target) * 100) : 0;
         bValue = b.target > 0 ? Math.round((b.raised / b.target) * 100) : 0;
       }
 
-      // Для числових полів конвертуємо в числа
       if (['raised', 'goal', 'peopleDonate'].includes(sortConfig.key)) {
         aValue = Number(aValue) || 0;
         bValue = Number(bValue) || 0;
@@ -140,11 +131,9 @@ const CollectionList = ({ locale = 'ua' }) => {
     });
   };
 
-  // Фільтруємо збори по пошуковому запиту та статусу
   const filterCollections = collections => {
     let filtered = collections;
 
-    // Фільтр по статусу
     if (statusFilter !== 'all') {
       filtered = filtered.filter(collection => {
         if (statusFilter === 'active') {
@@ -156,7 +145,6 @@ const CollectionList = ({ locale = 'ua' }) => {
       });
     }
 
-    // Фільтр по пошуковому запиту
     if (searchTerm.trim()) {
       filtered = filtered.filter(collection =>
         collection.title.toLowerCase().includes(searchTerm.toLowerCase().trim())
@@ -166,7 +154,6 @@ const CollectionList = ({ locale = 'ua' }) => {
     return filtered;
   };
 
-  // Отримуємо поточну сторінку з відфільтрованих і відсортованих даних
   const getCurrentPageCollections = () => {
     const filteredCollections = filterCollections(allCollections);
     const sortedCollections = sortCollections(filteredCollections);
@@ -180,7 +167,7 @@ const CollectionList = ({ locale = 'ua' }) => {
       key: 'title',
       label: 'Назва і дата збору',
       sortable: true,
-      sortKey: 'createdAt', // Сортуємо по даті створення
+      sortKey: 'createdAt',
       render: (value, row) => {
         const truncatedTitle = value && value.length > 30 ? `${value.substring(0, 30)}...` : value;
         const formattedDate = formatDate(row.createdAt, 'dd-MM.yyyy');
@@ -208,7 +195,7 @@ const CollectionList = ({ locale = 'ua' }) => {
       key: 'progress',
       label: 'Заповнено',
       sortable: true,
-      sortKey: 'progress', // Сортуємо по обчисленому відсотку
+      sortKey: 'progress',
       render: (_, row) => {
         const percentage = row.target > 0 ? Math.round((row.raised / row.target) * 100) : 0;
         return (
