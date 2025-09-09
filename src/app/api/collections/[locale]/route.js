@@ -4,19 +4,24 @@ import { NextResponse } from 'next/server';
 export async function GET(request, { params }) {
   try {
     const { locale } = await params;
+    const { searchParams } = new URL(request.url);
+    const perPage = searchParams.get('perPage') || '50';
 
     // Forward cookies from the original request
     const cookieHeader = request.headers.get('cookie');
 
     // Forward request to InHarmony API
-    const response = await fetch(`${API_CONFIG.BASE_URL}/api/collections/${locale}`, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        ...(cookieHeader ? { Cookie: cookieHeader } : {}),
-      },
-    });
+    const response = await fetch(
+      `${API_CONFIG.BASE_URL}/api/collections/${locale}?perPage=${perPage}`,
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          ...(cookieHeader ? { Cookie: cookieHeader } : {}),
+        },
+      }
+    );
 
     const data = await response.json();
 

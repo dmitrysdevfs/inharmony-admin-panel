@@ -29,7 +29,7 @@ const handleResponse = async response => {
 
 // Get collections list
 export const fetchCollections = async (locale = 'ua', page = 1, limit = 10) => {
-  const res = await fetch(`/api/collections/${locale}`, {
+  const res = await fetch(`/api/collections/${locale}?perPage=50`, {
     credentials: 'include',
   });
   const data = await handleResponse(res);
