@@ -7,7 +7,7 @@ import Table from '@/components/ui/Table';
 import Button from '@/components/ui/Button';
 import { formatDate, formatMoney, cn } from '@/lib/utils';
 import styles from './CollectionList.module.css';
-import { PencilIcon, TrashIcon } from '@heroicons/react/outline';
+import { PencilIcon, TrashIcon, SearchIcon, XIcon } from '@heroicons/react/outline';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/outline'; // Іконки для стрілочок
 
 const CollectionList = ({ locale = 'ua' }) => {
@@ -29,6 +29,14 @@ const CollectionList = ({ locale = 'ua' }) => {
     key: 'createdAt',
     direction: 'desc', // По замовчуванню - новіші збори спочатку
   });
+  const [searchTerm, setSearchTerm] = useState('');
+
+  // Перевірка на клієнтську сторону для уникнення проблем з гідратацією
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const loadCollections = useCallback(async () => {
     try {
@@ -80,6 +88,17 @@ const CollectionList = ({ locale = 'ua' }) => {
     setPagination(prev => ({ ...prev, page: 1 }));
   };
 
+  const handleSearch = value => {
+    setSearchTerm(value);
+    // Скидаємо на першу сторінку при пошуку
+    setPagination(prev => ({ ...prev, page: 1 }));
+  };
+
+  const clearSearch = () => {
+    setSearchTerm('');
+    setPagination(prev => ({ ...prev, page: 1 }));
+  };
+
   const sortCollections = collections => {
     if (!sortConfig.key) return collections;
 
@@ -115,9 +134,19 @@ const CollectionList = ({ locale = 'ua' }) => {
     });
   };
 
-  // Отримуємо поточну сторінку з відсортованих даних
+  // Фільтруємо збори по пошуковому запиту
+  const filterCollections = collections => {
+    if (!searchTerm.trim()) return collections;
+
+    return collections.filter(collection =>
+      collection.title.toLowerCase().includes(searchTerm.toLowerCase().trim())
+    );
+  };
+
+  // Отримуємо поточну сторінку з відфільтрованих і відсортованих даних
   const getCurrentPageCollections = () => {
-    const sortedCollections = sortCollections(allCollections);
+    const filteredCollections = filterCollections(allCollections);
+    const sortedCollections = sortCollections(filteredCollections);
     const startIndex = (pagination.page - 1) * pagination.limit;
     const endIndex = startIndex + pagination.limit;
     return sortedCollections.slice(startIndex, endIndex);
@@ -211,7 +240,8 @@ const CollectionList = ({ locale = 'ua' }) => {
     },
   ];
 
-  const totalPages = Math.ceil(allCollections.length / pagination.limit);
+  const filteredCollections = filterCollections(allCollections);
+  const totalPages = Math.ceil(filteredCollections.length / pagination.limit);
 
   if (loading) {
     return <div className={styles.loading}>Завантаження...</div>;
@@ -221,7 +251,38 @@ const CollectionList = ({ locale = 'ua' }) => {
     <div>
       <div className={styles.container}>
         <div className={styles.header}>
-          <h2>Збори коштів</h2>
+          <div className={styles.headerLeft}>
+            <h2>Збори коштів</h2>
+            {/* Поле пошуку - тільки на клієнті */}
+            {isClient && (
+              <div className={styles.searchContainer}>
+                <div className={styles.searchInputWrapper}>
+                  <SearchIcon className={styles.searchIcon} />
+                  <input
+                    type="text"
+                    placeholder="Пошук по назві збору..."
+                    value={searchTerm}
+                    onChange={e => handleSearch(e.target.value)}
+                    className={styles.searchInput}
+                  />
+                  {searchTerm && (
+                    <button
+                      onClick={clearSearch}
+                      className={styles.clearButton}
+                      title="Очистити пошук"
+                    >
+                      <XIcon className={styles.clearIcon} />
+                    </button>
+                  )}
+                </div>
+                {searchTerm && (
+                  <div className={styles.searchResults}>
+                    Знайдено {filteredCollections.length} з {allCollections.length} зборів
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
           <button className={styles.creationBtn} onClick={() => router.push(`${BASE_ROUTE}/new`)}>
             Створити новий збір
           </button>
