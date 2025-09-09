@@ -250,16 +250,12 @@ const ReportList = () => {
     {
       key: 'actions',
       label: 'Дії',
-      width: '20%',
       render: (_, row) => (
         <div className={styles.actions}>
           <Button
             size="small"
             variant="secondary"
-            onClick={e => {
-              e.stopPropagation();
-              handleEdit(row._id);
-            }}
+            onClick={() => handleEdit(row._id)}
             className={styles.iconButton}
           >
             <PencilIcon className={styles.icon} />
@@ -268,10 +264,7 @@ const ReportList = () => {
           <Button
             size="small"
             variant="danger"
-            onClick={e => {
-              e.stopPropagation();
-              handleDelete(row._id);
-            }}
+            onClick={() => handleDelete(row._id)}
             className={styles.iconButton}
           >
             <TrashIcon className={styles.icon} />
@@ -287,42 +280,46 @@ const ReportList = () => {
 
   if (loading) {
     return (
-      <div className={styles.container}>
-        <div className={styles.header}>
-          <h2>Звіти</h2>
+      <div>
+        <div className={styles.container}>
+          <div className={styles.header}>
+            <div className={styles.headerLeft}>
+              <h2>Звіти</h2>
+            </div>
+          </div>
+          <div className={styles.loading}>Завантаження...</div>
         </div>
-        <div className={styles.loading}>Завантаження...</div>
       </div>
     );
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <div className={styles.headerLeft}>
-          <h2>Звіти</h2>
+    <div>
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <div className={styles.headerLeft}>
+            <h2>Звіти</h2>
+          </div>
+          <button className={styles.creationBtn} onClick={handleCreateNew}>
+            Створити новий звіт
+          </button>
         </div>
-        <button className={styles.creationBtn} onClick={handleCreateNew}>
-          Створити новий звіт
-        </button>
-      </div>
 
-      {error && <div className={styles.error}>{error}</div>}
+        {error && <div className={styles.error}>{error}</div>}
 
-      <div className={styles.tableWrapper}>
         <Table
           columns={columns}
           data={getCurrentPageReports()}
           onSort={handleSort}
           sortConfig={sortConfig}
           onRowClick={handleRowClick}
+          className={styles.reportsTable}
         />
+
+        {reports.length === 0 && !loading && (
+          <div className={styles.emptyState}>Немає звітів для відображення</div>
+        )}
       </div>
-
-      {reports.length === 0 && !loading && (
-        <div className={styles.emptyState}>Немає звітів для відображення</div>
-      )}
-
       {Math.ceil(reports.length / pagination.limit) > 1 && (
         <div className={styles.pagination}>
           <button

@@ -45,7 +45,7 @@ export default function DashboardLayout({ children }) {
     );
   }
 
-  if (!user) {
+  if (!user && !loading) {
     return (
       <div className={styles.dashboardContainer}>
         <div

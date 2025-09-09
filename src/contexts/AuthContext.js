@@ -28,13 +28,16 @@ export const AuthProvider = ({ children }) => {
         const response = await fetchCurrentUser();
         setUser(response.data);
       } catch (error) {
-        setUser(null);
-
-        // Clear invalid cookies
-        if (typeof document !== 'undefined') {
-          document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-          document.cookie = 'refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        // Only clear user state if it's a 401/403 error (unauthorized)
+        if (error.status === 401 || error.status === 403) {
+          setUser(null);
+          // Clear invalid cookies
+          if (typeof document !== 'undefined') {
+            document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            document.cookie = 'refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+          }
         }
+        // For other errors (network, server), keep current user state
       } finally {
         setLoading(false);
       }
