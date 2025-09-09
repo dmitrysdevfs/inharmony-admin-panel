@@ -30,6 +30,7 @@ const CollectionList = ({ locale = 'ua' }) => {
     direction: 'desc', // По замовчуванню - новіші збори спочатку
   });
   const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all'); // 'all', 'active', 'closed'
 
   // Перевірка на клієнтську сторону для уникнення проблем з гідратацією
   const [isClient, setIsClient] = useState(false);
@@ -99,6 +100,11 @@ const CollectionList = ({ locale = 'ua' }) => {
     setPagination(prev => ({ ...prev, page: 1 }));
   };
 
+  const handleStatusFilter = status => {
+    setStatusFilter(status);
+    setPagination(prev => ({ ...prev, page: 1 }));
+  };
+
   const sortCollections = collections => {
     if (!sortConfig.key) return collections;
 
@@ -134,13 +140,30 @@ const CollectionList = ({ locale = 'ua' }) => {
     });
   };
 
-  // Фільтруємо збори по пошуковому запиту
+  // Фільтруємо збори по пошуковому запиту та статусу
   const filterCollections = collections => {
-    if (!searchTerm.trim()) return collections;
+    let filtered = collections;
 
-    return collections.filter(collection =>
-      collection.title.toLowerCase().includes(searchTerm.toLowerCase().trim())
-    );
+    // Фільтр по статусу
+    if (statusFilter !== 'all') {
+      filtered = filtered.filter(collection => {
+        if (statusFilter === 'active') {
+          return collection.status === 'active';
+        } else if (statusFilter === 'closed') {
+          return collection.status === 'closed';
+        }
+        return true;
+      });
+    }
+
+    // Фільтр по пошуковому запиту
+    if (searchTerm.trim()) {
+      filtered = filtered.filter(collection =>
+        collection.title.toLowerCase().includes(searchTerm.toLowerCase().trim())
+      );
+    }
+
+    return filtered;
   };
 
   // Отримуємо поточну сторінку з відфільтрованих і відсортованих даних
@@ -253,29 +276,61 @@ const CollectionList = ({ locale = 'ua' }) => {
         <div className={styles.header}>
           <div className={styles.headerLeft}>
             <h2>Збори коштів</h2>
-            {/* Поле пошуку - тільки на клієнті */}
+            {/* Поле пошуку та фільтр статусу - тільки на клієнті */}
             {isClient && (
-              <div className={styles.searchContainer}>
-                <div className={styles.searchInputWrapper}>
-                  <SearchIcon className={styles.searchIcon} />
-                  <input
-                    type="text"
-                    placeholder="Пошук по назві збору..."
-                    value={searchTerm}
-                    onChange={e => handleSearch(e.target.value)}
-                    className={styles.searchInput}
-                  />
-                  {searchTerm && (
-                    <button
-                      onClick={clearSearch}
-                      className={styles.clearButton}
-                      title="Очистити пошук"
-                    >
-                      <XIcon className={styles.clearIcon} />
-                    </button>
-                  )}
+              <div className={styles.filtersContainer}>
+                <div className={styles.searchContainer}>
+                  <div className={styles.searchInputWrapper}>
+                    <SearchIcon className={styles.searchIcon} />
+                    <input
+                      type="text"
+                      placeholder="Пошук по назві збору..."
+                      value={searchTerm}
+                      onChange={e => handleSearch(e.target.value)}
+                      className={styles.searchInput}
+                    />
+                    {searchTerm && (
+                      <button
+                        onClick={clearSearch}
+                        className={styles.clearButton}
+                        title="Очистити пошук"
+                      >
+                        <XIcon className={styles.clearIcon} />
+                      </button>
+                    )}
+                  </div>
                 </div>
-                {searchTerm && (
+
+                <div className={styles.statusFilterContainer}>
+                  <div className={styles.statusFilter}>
+                    <button
+                      className={cn(styles.statusButton, statusFilter === 'all' && styles.active)}
+                      onClick={() => handleStatusFilter('all')}
+                    >
+                      Всі
+                    </button>
+                    <button
+                      className={cn(
+                        styles.statusButton,
+                        statusFilter === 'active' && styles.active
+                      )}
+                      onClick={() => handleStatusFilter('active')}
+                    >
+                      Активні
+                    </button>
+                    <button
+                      className={cn(
+                        styles.statusButton,
+                        statusFilter === 'closed' && styles.active
+                      )}
+                      onClick={() => handleStatusFilter('closed')}
+                    >
+                      Завершені
+                    </button>
+                  </div>
+                </div>
+
+                {(searchTerm || statusFilter !== 'all') && (
                   <div className={styles.searchResults}>
                     Знайдено {filteredCollections.length} з {allCollections.length} зборів
                   </div>

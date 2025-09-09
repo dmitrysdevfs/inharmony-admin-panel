@@ -1,8 +1,6 @@
 const BASE_URL = '/api/auth';
 
 export const login = async credentials => {
-  console.log('🔐 Attempting login with:', { email: credentials.email });
-
   const res = await fetch(`${BASE_URL}/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -10,16 +8,12 @@ export const login = async credentials => {
     credentials: 'include',
   });
 
-  console.log('📡 Login response status:', res.status);
-
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({}));
-    console.error('❌ Login failed:', errorData);
     throw new Error(errorData.message || 'Login failed');
   }
 
   const data = await res.json();
-  console.log('✅ Login successful:', data);
   return data;
 };
 
@@ -32,23 +26,17 @@ export const logout = async () => {
 };
 
 export const getCurrentUser = async () => {
-  console.log('👤 Fetching current user...');
-
   const res = await fetch(`${BASE_URL}/users/current`, {
     method: 'GET',
     credentials: 'include',
   });
 
-  console.log('📡 Current user response status:', res.status);
-
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({}));
-    console.error('❌ Failed to fetch current user:', errorData);
     throw new Error(errorData.message || 'Failed to fetch current user');
   }
 
   const data = await res.json();
-  console.log('✅ Current user data:', data);
   return data;
 };
 

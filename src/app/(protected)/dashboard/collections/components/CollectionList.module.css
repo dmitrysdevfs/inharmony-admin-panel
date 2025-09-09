@@ -256,6 +256,8 @@
 /* Стилі для пошуку */
 .searchContainer {
   position: relative;
+  flex: 1; /* Займає доступний простір */
+  max-width: 400px; /* Максимальна ширина */
 }
 
 .searchInputWrapper {
@@ -327,4 +329,59 @@
   color: #6b7280;
   font-style: italic;
   white-space: nowrap;
+  z-index: 10;
+}
+
+/* Стилі для контейнера фільтрів */
+.filtersContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+}
+
+/* Стилі для фільтра статусу */
+.statusFilterContainer {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0; /* Не стискати фільтр */
+}
+
+.statusFilter {
+  display: flex;
+  background: #f9fafb;
+  border-radius: 24px;
+  padding: 4px;
+  border: 1px solid #e5e7eb;
+}
+
+.statusButton {
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  border-radius: 20px;
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 14px;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  white-space: nowrap;
+}
+
+.statusButton:hover {
+  color: #374151;
+  background: rgba(139, 92, 246, 0.1);
+}
+
+.statusButton.active {
+  background: #111827;
+  color: white;
+  font-weight: 500;
+}
+
+.statusButton.active:hover {
+  background: #374151;
+  color: white;
 }
