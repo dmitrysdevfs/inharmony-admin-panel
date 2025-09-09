@@ -93,6 +93,18 @@ const CollectionList = ({ locale = 'ua' }) => {
         bValue = new Date(bValue);
       }
 
+      // Для обчисленого поля progress (відсоток заповнення)
+      if (sortConfig.key === 'progress') {
+        aValue = a.target > 0 ? Math.round((a.raised / a.target) * 100) : 0;
+        bValue = b.target > 0 ? Math.round((b.raised / b.target) * 100) : 0;
+      }
+
+      // Для числових полів конвертуємо в числа
+      if (['raised', 'goal', 'peopleDonate'].includes(sortConfig.key)) {
+        aValue = Number(aValue) || 0;
+        bValue = Number(bValue) || 0;
+      }
+
       if (aValue < bValue) {
         return sortConfig.direction === 'asc' ? -1 : 1;
       }
@@ -143,6 +155,8 @@ const CollectionList = ({ locale = 'ua' }) => {
     {
       key: 'progress',
       label: 'Заповнено',
+      sortable: true,
+      sortKey: 'progress', // Сортуємо по обчисленому відсотку
       render: (_, row) => {
         const percentage = row.target > 0 ? Math.round((row.raised / row.target) * 100) : 0;
         return (
@@ -155,16 +169,19 @@ const CollectionList = ({ locale = 'ua' }) => {
     {
       key: 'raised',
       label: 'Зібрано',
+      sortable: true,
       render: value => formatMoney(value),
     },
     {
       key: 'goal',
       label: 'Ціль',
+      sortable: true,
       render: value => formatMoney(value),
     },
     {
       key: 'peopleDonate',
       label: 'Донори',
+      sortable: true,
       render: value => value || 0,
     },
     {
