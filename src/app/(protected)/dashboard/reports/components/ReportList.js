@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
-import { fetchReports } from '@/services/reportsService';
+import { fetchReports, deleteReport } from '@/services/reportsService';
 import Table from '@/components/ui/Table';
 import Button from '@/components/ui/Button';
 import {
@@ -166,24 +166,39 @@ const ReportList = () => {
   const handleDelete = async reportId => {
     if (confirm('Ви впевнені, що хочете видалити цей звіт? Цю дію неможливо скасувати.')) {
       try {
-        // TODO: Implement delete report API call
-        console.log('Delete report:', reportId);
-        alert('Функція видалення буде реалізована пізніше');
+        await deleteReport(reportId);
+        // Reload reports after successful deletion
+        const reportsArray = await fetchReports();
+        setReports(reportsArray);
+        setPagination(prev => ({
+          ...prev,
+          total: reportsArray.length,
+        }));
+        alert('Звіт успішно видалено');
       } catch (error) {
-        alert('Помилка при видаленні звіту. Спробуйте ще раз.');
+        // Show specific error message based on status code
+        let errorMessage = 'Помилка при видаленні звіту. Спробуйте ще раз.';
+
+        if (error.status === 400) {
+          errorMessage = 'Некоректний ID звіту';
+        } else if (error.status === 403) {
+          errorMessage = 'У вас немає прав для видалення цього звіту';
+        } else if (error.status === 404) {
+          errorMessage = 'Звіт не знайдено';
+        }
+
+        alert(errorMessage);
       }
     }
   };
 
   const handleEdit = reportId => {
     // TODO: Implement edit report navigation
-    console.log('Edit report:', reportId);
     alert('Функція редагування буде реалізована пізніше');
   };
 
   const handleCreateNew = () => {
     // TODO: Implement create new report navigation
-    console.log('Create new report');
     alert('Функція створення нового звіту буде реалізована пізніше');
   };
 

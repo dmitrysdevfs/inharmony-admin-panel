@@ -38,3 +38,26 @@ export const fetchReports = async () => {
     return [];
   }
 };
+
+// Delete report
+export const deleteReport = async reportId => {
+  const res = await fetch(`/api/reports/${reportId}`, {
+    method: 'DELETE',
+    credentials: 'include',
+  });
+
+  // For 204 No Content, return success without parsing JSON
+  if (res.status === 204) {
+    return { success: true };
+  }
+
+  // For other responses, handle errors properly
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    const error = new Error(errorData.error || 'Failed to delete report');
+    error.status = res.status;
+    throw error;
+  }
+
+  return { success: true };
+};
