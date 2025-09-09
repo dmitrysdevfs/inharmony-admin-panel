@@ -20,6 +20,7 @@ const Table = ({ columns = [], data = [], className, onRowClick, onSort, sortCon
                 key={column.key}
                 className={cn(styles.th, column.sortable && styles.sortable)}
                 onClick={() => handleSort(column)}
+                style={{ width: column.width }}
               >
                 <div className={styles.thContent}>
                   <span>{column.label}</span>

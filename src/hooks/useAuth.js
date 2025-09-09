@@ -1,4 +1,3 @@
-// hooks/useAuth.js
 import { useState, useEffect, useCallback } from 'react';
 import { login, logout, getCurrentUser } from '@/services/authService';
 
@@ -7,7 +6,7 @@ export const useAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Ініціалізація при завантаженні
+  // Initialize auth state on mount
   useEffect(() => {
     const result = getCurrentUser();
     if (result.success && result.data) {
@@ -20,7 +19,7 @@ export const useAuth = () => {
     setLoading(false);
   }, []);
 
-  // 🔑 Логін
+  // Login handler
   const handleLogin = useCallback(async (email, password) => {
     const result = await login(email, password);
     if (result.success) {
@@ -30,7 +29,7 @@ export const useAuth = () => {
     return result;
   }, []);
 
-  // Logout
+  // Logout handler
   const handleLogout = useCallback(async () => {
     const result = await logout();
     if (result.success) {
