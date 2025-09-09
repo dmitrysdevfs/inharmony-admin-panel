@@ -9,8 +9,14 @@ export default function ProtectedLayout({ children }) {
   const router = useRouter();
 
   useEffect(() => {
+    // Only redirect if we're sure the user is not authenticated
+    // Add a small delay to prevent race conditions during navigation
     if (!loading && !user) {
-      router.push('/auth/login');
+      const timer = setTimeout(() => {
+        router.push('/auth/login');
+      }, 100);
+
+      return () => clearTimeout(timer);
     }
   }, [user, loading, router]);
 

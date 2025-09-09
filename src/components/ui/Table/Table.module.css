@@ -36,9 +36,13 @@
 .th:nth-child(2):not(.sortable) .thContent,
 .th:nth-child(3):not(.sortable) .thContent,
 .th:nth-child(4):not(.sortable) .thContent,
-.th:nth-child(5):not(.sortable) .thContent,
-.th:nth-child(6):not(.sortable) .thContent {
+.th:nth-child(5):not(.sortable) .thContent {
   justify-content: center;
+}
+
+/* Остання колонка (кнопки дій) - вирівнюємо по лівому краю */
+.th:last-child:not(.sortable) .thContent {
+  justify-content: flex-start;
 }
 
 .sortable {
@@ -122,4 +126,9 @@
 .td:nth-child(6) {
   /* Донори */
   text-align: center;
+}
+
+/* Остання колонка (кнопки дій) - вирівнюємо по лівому краю */
+.td:last-child {
+  text-align: left;
 }
