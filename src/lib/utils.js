@@ -1,30 +1,37 @@
 import clsx from 'clsx';
 
-// Утиліта для об'єднання CSS класів
 export const cn = clsx;
 
-// Форматування дати
-export const formatDate = date => {
+export const formatDate = (date, format = 'uk-UA') => {
   if (!date) return '';
+
+  if (format === 'dd-MM.yyyy') {
+    const d = new Date(date);
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+    return `${day}-${month}.${year}`;
+  }
+
   return new Date(date).toLocaleDateString('uk-UA');
 };
 
-// Форматування грошей
 export const formatMoney = (amount, currency = 'UAH') => {
-  if (!amount) return '0 ₴';
-  return new Intl.NumberFormat('uk-UA', {
-    style: 'currency',
-    currency: currency === 'UAH' ? 'UAH' : 'USD',
+  if (!amount) amount = 0;
+
+  const formattedNumber = new Intl.NumberFormat('uk-UA', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   }).format(amount);
+
+  return currency === 'UAH' ? `${formattedNumber} ₴` : `$${formattedNumber}`;
 };
 
-// Валідація email
 export const isValidEmail = email => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 };
 
-// Генерація унікального ID
 export const generateId = () => {
   return Math.random().toString(36).substr(2, 9);
 };

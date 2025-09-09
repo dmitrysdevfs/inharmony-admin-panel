@@ -18,13 +18,13 @@ export async function GET(request, { params }) {
       },
     });
 
-    const data = await response.json();
-
     if (response.ok) {
+      const data = await response.json();
       return NextResponse.json(data, {
         status: response.status,
       });
     } else {
+      const data = await response.json();
       return NextResponse.json(
         { error: 'Failed to fetch collection', details: data },
         { status: response.status }
@@ -39,7 +39,7 @@ export async function GET(request, { params }) {
 }
 
 // Update collection
-export async function PUT(request, { params }) {
+export async function PATCH(request, { params }) {
   try {
     const { locale, id } = await params;
     const body = await request.json();
@@ -48,7 +48,7 @@ export async function PUT(request, { params }) {
     const cookieHeader = request.headers.get('cookie');
 
     const response = await fetch(`${API_CONFIG.BASE_URL}/api/collections/${locale}/${id}`, {
-      method: 'PUT',
+      method: 'PATCH',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -57,13 +57,13 @@ export async function PUT(request, { params }) {
       body: JSON.stringify(body),
     });
 
-    const data = await response.json();
-
     if (response.ok) {
+      const data = await response.json();
       return NextResponse.json(data, {
         status: response.status,
       });
     } else {
+      const data = await response.json();
       return NextResponse.json(
         { error: 'Failed to update collection', details: data },
         { status: response.status }
@@ -94,13 +94,20 @@ export async function DELETE(request, { params }) {
       },
     });
 
-    const data = await response.json();
-
     if (response.ok) {
+      // For 204 No Content, don't try to parse JSON
+      if (response.status === 204) {
+        return new NextResponse(null, { status: 204 });
+      }
+
+      // For other successful responses, parse JSON
+      const data = await response.json();
       return NextResponse.json(data, {
         status: response.status,
       });
     } else {
+      // For error responses, try to parse JSON
+      const data = await response.json();
       return NextResponse.json(
         { error: 'Failed to delete collection', details: data },
         { status: response.status }

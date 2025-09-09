@@ -1,13 +1,13 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useAuthGuard } from '@/hooks/useAuthGuard';
+import { useAuth } from '@/contexts/AuthContext';
 import { fetchUsers } from '@/services/userService';
 import UserProfile from './UserProfile';
 import styles from './UserList.module.css';
 
 const UserList = () => {
-  const { isAuthorized, isChecking, user } = useAuthGuard('admin');
+  const { user, loading: authLoading, isAdmin } = useAuth();
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [error, setError] = useState('');
@@ -19,7 +19,11 @@ const UserList = () => {
         setLoading(true);
         setError('');
 
-        if (!isAuthorized) {
+        if (authLoading) {
+          return;
+        }
+
+        if (!isAdmin) {
           setError('У вас немає доступу до списку користувачів.');
           setLoading(false);
           return;
@@ -34,16 +38,16 @@ const UserList = () => {
       }
     };
 
-    if (!isChecking && isAuthorized) {
+    if (!authLoading && isAdmin) {
       fetchData();
     }
-  }, [isChecking, isAuthorized]);
+  }, [authLoading, isAdmin]);
 
   const handleSelect = user => {
     setSelectedUser(user);
   };
 
-  if (isChecking || loading) {
+  if (loading) {
     return (
       <div className={styles.container}>
         <div className={styles.header}>

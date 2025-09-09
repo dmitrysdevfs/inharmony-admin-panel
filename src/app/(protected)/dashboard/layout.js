@@ -1,7 +1,9 @@
 'use client';
 
 import { useRouter, usePathname } from 'next/navigation';
+import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
+import { useMemo } from 'react';
 import Button from '@/components/ui/Button';
 import styles from './DashboardLayout.module.css';
 
@@ -14,15 +16,17 @@ export default function DashboardLayout({ children }) {
     await logout();
   };
 
-  const navigation = [
-    { name: 'Збори', href: '/dashboard/collections', icon: '📊' },
-    { name: 'Звіти', href: '/dashboard/reports', icon: '📈' },
-    ...(isAdmin ? [{ name: 'Користувачі', href: '/dashboard/users', icon: '👥' }] : []),
-    { name: 'Профіль', href: '/dashboard/users/profile', icon: '👤' },
-    { name: 'Налаштування', href: '/dashboard/settings', icon: '⚙️' },
-  ];
+  const navigation = useMemo(
+    () => [
+      { name: 'Збори', href: '/dashboard/collections', icon: '📊' },
+      { name: 'Звіти', href: '/dashboard/reports', icon: '📈' },
+      ...(isAdmin ? [{ name: 'Користувачі', href: '/dashboard/users', icon: '👥' }] : []),
+      { name: 'Профіль', href: '/dashboard/users/profile', icon: '👤' },
+      { name: 'Налаштування', href: '/dashboard/settings', icon: '⚙️' },
+    ],
+    [isAdmin]
+  );
 
-  // Показуємо loading поки завантажується користувач
   if (loading) {
     return (
       <div className={styles.dashboardContainer}>
@@ -41,7 +45,6 @@ export default function DashboardLayout({ children }) {
     );
   }
 
-  // Якщо користувача немає після завантаження, показуємо повідомлення
   if (!user) {
     return (
       <div className={styles.dashboardContainer}>
@@ -71,14 +74,14 @@ export default function DashboardLayout({ children }) {
           {navigation.map(item => {
             const isActive = pathname.startsWith(item.href);
             return (
-              <a
+              <Link
                 key={item.name}
                 href={item.href}
                 className={`${styles.navItem} ${isActive ? styles.active : ''}`}
               >
                 <span className={styles.icon}>{item.icon}</span>
                 <span className={styles.name}>{item.name}</span>
-              </a>
+              </Link>
             );
           })}
         </nav>
