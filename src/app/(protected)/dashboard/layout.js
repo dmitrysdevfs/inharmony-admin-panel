@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { useMemo } from 'react';
 import Button from '@/components/ui/Button';
+import Image from 'next/image';
 import styles from './DashboardLayout.module.css';
 
 export default function DashboardLayout({ children }) {
@@ -68,7 +69,12 @@ export default function DashboardLayout({ children }) {
       {/* Sidebar */}
       <aside className={styles.sidebar}>
         <div className={styles.logo}>
-          <h2>InHarmony</h2>
+          <Image
+            src="/logo.png" 
+            alt="InHarmony Logo"
+            width={73}
+            height={73}
+          />
         </div>
         <nav className={styles.nav}>
           {navigation.map(item => {

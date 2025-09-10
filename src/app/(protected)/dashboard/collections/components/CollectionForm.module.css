@@ -53,6 +53,7 @@
   font-size: 16px;
   line-height: 150%;
   color: var(--black);
+  margin-bottom: 4px;
 }
 
 .select {
@@ -90,7 +91,6 @@
 .textarea {
   width: 100%;
   padding: 16px 20px;
-  /* border: 2px solid #e5e7eb; */
   border-radius: 24px;
   font-size: 14px;
   font-family: inherit;
@@ -109,7 +109,7 @@
 }
 
 .textareaWide {
-  min-height: 108px;
+  min-height: 103px;
   font-family: var(--font-family);
   font-weight: 400;
   font-size: 16px;
@@ -220,7 +220,6 @@
 .tagInput {
   flex: 1;
   padding: 8px 12px;
-  /* border: 1px solid #ddd; */
   border-radius: 24px;
   height: 48px;
   font-size: 14px;
