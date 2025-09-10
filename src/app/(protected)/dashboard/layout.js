@@ -107,9 +107,9 @@ export default function DashboardLayout({ children }) {
               <span className={styles.userName}>{user.name || 'Користувач'}</span>
               <span className={styles.userRole}>{user.role || 'Роль'}</span>
             </div>
-            <Button variant="outline" size="small" onClick={handleLogout}>
+            <button className={styles.logoutBtn} onClick={handleLogout}>
               Вийти
-            </Button>
+            </button>
           </div>
         </header>
         <main className={styles.main}>{children}</main>
