@@ -5,15 +5,13 @@
 }
 
 .sidebar {
-  width: 250px;
-  background-color: #1f2937;
-  color: white;
+  background: var(--ligtn-p-icon);
+  color: black;
   padding: 20px 0;
 }
 
 .logo {
   padding: 0 20px 20px;
-  border-bottom: 1px solid #374151;
   margin-bottom: 20px;
 }
 
@@ -35,18 +33,21 @@
   align-items: center;
   gap: 12px;
   padding: 12px 20px;
-  color: #d1d5db;
+  color: black;
   text-decoration: none;
   transition: all 0.2s ease;
+  width: 208px;
+  height: 44px;
+  border-radius: 24px;
 }
 
 .navItem:hover {
-  background-color: #374151;
+  background: var(--light-p);
   color: white;
 }
 
 .navItem.active {
-  background-color: #3b82f6;
+  background: var(--purple);
   color: white;
 }
 
