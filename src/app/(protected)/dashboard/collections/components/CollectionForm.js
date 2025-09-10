@@ -184,7 +184,7 @@ const CollectionForm = ({ collection, onSubmit, loading = false, locale = 'ua' }
               />
             </div>
           </div>
-          <small className={styles.helpText}>Мінімум 1 секція обов&apos;язкова</small>
+          {/* <small className={styles.helpText}>Мінімум 1 секція обов&apos;язкова</small> */}
         </div>
       </div>
 
