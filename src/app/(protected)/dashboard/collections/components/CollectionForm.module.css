@@ -109,7 +109,7 @@
 }
 
 .textareaWide {
-  min-height: 80px;
+  min-height: 108px;
   font-family: var(--font-family);
   font-weight: 400;
   font-size: 16px;
@@ -167,7 +167,7 @@
   border-radius: 24px;
   background: white;
   padding: 8px 12px;
-  width: 230px;
+  width: 100%;
   height: 212px;
   cursor: pointer;
   font-family: var(--font-family);
@@ -181,7 +181,7 @@
 }
 
 .fileLabel:hover {
- transform: translateY(-1px);
+  transform: translateY(-1px);
   box-shadow: 0 2px 2px rgba(190, 59, 246, 0.3);
 }
 
@@ -316,10 +316,44 @@
 .formActions {
   grid-column: 1 / -1;
   display: flex;
-  gap: 16px;
-  justify-content: flex-end;
-  padding: 24px 0 0 0;
-  margin-top: 32px;
+  gap: 12px;
+}
+.applyBtn {
+  background: var(--btn);
+  border-radius: 21px;
+  border: 2px solid var(--btn);
+  width: 100%;
+  height: 44px;
+  font-family: var(--font-family);
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 133%;
+  text-align: center;
+  color: #fff;
+  transition: all 0.5s ease;
+}
+
+.applyBtn:hover {
+  background: var(--btn-hover);
+  color: var(--btn);
+}
+.cancelBtn {
+  background: transparent;
+  border-radius: 21px;
+  border: 2px solid var(--btn);
+  width: 100%;
+  height: 44px;
+  font-family: var(--font-family);
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 133%;
+  text-align: center;
+  color: var(--btn);
+  transition: all 0.5s ease;
+}
+.cancelBtn:hover {
+  background: var(--btn);
+  color: #fff;
 }
 
 /* Long Description Container */
