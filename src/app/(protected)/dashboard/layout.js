@@ -73,11 +73,16 @@ export default function DashboardLayout({ children }) {
         <nav className={styles.nav}>
           {navigation.map(item => {
             const isActive = pathname.startsWith(item.href);
+            const isProfilePage = pathname === '/dashboard/users/profile';
+            const isUsersItem = item.href === '/dashboard/users';
+
             return (
               <Link
                 key={item.name}
                 href={item.href}
-                className={`${styles.navItem} ${isActive ? styles.active : ''}`}
+                className={`${styles.navItem} ${isActive ? styles.active : ''} ${
+                  isActive && isProfilePage && isUsersItem ? styles['profile-active'] : ''
+                }`}
               >
                 <span className={styles.icon}>{item.icon}</span>
                 <span className={styles.name}>{item.name}</span>

@@ -50,6 +50,11 @@
   color: white;
 }
 
+.navItem.active.profile-active {
+  background-color: transparent;
+  color: #d1d5db;
+}
+
 .icon {
   font-size: 20px;
 }

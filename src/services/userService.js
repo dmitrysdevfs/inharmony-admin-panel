@@ -50,6 +50,13 @@ export const fetchCurrentUser = async () => {
   return { data: data.data || data.user || data || null };
 };
 
+// Get specific user by ID from users list (admin only)
+export const fetchUserById = async userId => {
+  const users = await fetchUsers();
+  const user = users.find(u => u._id === userId);
+  return { data: user || null };
+};
+
 // Create new user (admin only)
 export const createUser = async userData => {
   const res = await fetch('/api/auth/register', {
@@ -71,7 +78,7 @@ export const updateUser = async (userId, userData) => {
     body: JSON.stringify(userData),
   });
   const data = await handleResponse(res);
-  return { data: data.data || data.user || null };
+  return { data: data.data || data.user || data || null };
 };
 
 // Delete user (admin only)

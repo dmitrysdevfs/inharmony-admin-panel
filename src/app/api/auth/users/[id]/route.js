@@ -5,6 +5,7 @@ export async function PATCH(request, { params }) {
   try {
     const body = await request.json();
     const { id } = params;
+    const cookieHeader = request.headers.get('cookie');
 
     // Forward request to InHarmony API
     const response = await fetch(`${API_CONFIG.BASE_URL}/api/auth/users/${id}`, {
@@ -12,6 +13,7 @@ export async function PATCH(request, { params }) {
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
+        Cookie: cookieHeader || '',
       },
       credentials: 'include',
       body: JSON.stringify(body),
@@ -40,20 +42,25 @@ export async function PATCH(request, { params }) {
 export async function DELETE(request, { params }) {
   try {
     const { id } = params;
+    const cookieHeader = request.headers.get('cookie');
 
     // Forward request to InHarmony API
     const response = await fetch(`${API_CONFIG.BASE_URL}/api/auth/users/${id}`, {
       method: 'DELETE',
       headers: {
         Accept: 'application/json',
+        Cookie: cookieHeader || '',
       },
       credentials: 'include',
     });
 
     if (response.ok) {
-      return NextResponse.json({ success: true }, {
-        status: response.status,
-      });
+      return NextResponse.json(
+        { success: true },
+        {
+          status: response.status,
+        }
+      );
     } else {
       const data = await response.json();
       return NextResponse.json(
