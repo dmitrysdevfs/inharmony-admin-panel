@@ -184,7 +184,7 @@ const CollectionForm = ({ collection, onSubmit, loading = false, locale = 'ua' }
               />
             </div>
           </div>
-          <small className={styles.helpText}>Мінімум 1 секція обов&apos;язкова</small>
+          {/* <small className={styles.helpText}>Мінімум 1 секція обов&apos;язкова</small> */}
         </div>
       </div>
 
@@ -360,18 +360,18 @@ const CollectionForm = ({ collection, onSubmit, loading = false, locale = 'ua' }
           </div>
         </div>
 
-        {/* Важливість */}
-      </div>
-
-      <div className={styles.formActions}>
-        <Button type="submit" variant="primary" disabled={loading}>
+         <div className={styles.formActions}>
+        <button className={styles.applyBtn} type="submit" disabled={loading}>
           {loading ? 'Збереження...' : collection ? 'Оновити збір' : 'Створити збір'}
-        </Button>
+        </button>
 
-        <Button type="button" variant="outline" onClick={() => window.history.back()}>
+        <button className={styles.cancelBtn} type="button" onClick={() => window.history.back()}>
           Скасувати
-        </Button>
+        </button>
       </div>
+      </div>
+
+     
     </form>
   );
 };
