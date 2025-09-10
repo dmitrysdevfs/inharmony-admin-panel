@@ -32,14 +32,16 @@ export default function NewCollectionPage() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <h1>Створити новий збір коштів</h1>
-        <p>Заповніть форму для створення нового збору коштів</p>
+      <div className={styles.wrapper}>
+        <div className={styles.header}>
+          <h1>Створити новий збір коштів</h1>
+          <p>Заповніть форму для створення нового збору коштів</p>
+        </div>
+
+        {error && <div className={styles.error}>{error}</div>}
+
+        <CollectionForm onSubmit={handleSubmit} loading={loading} locale="ua" />
       </div>
-
-      {error && <div className={styles.error}>{error}</div>}
-
-      <CollectionForm onSubmit={handleSubmit} loading={loading} locale="ua" />
     </div>
   );
 }
