@@ -39,7 +39,7 @@ const MerchForm = ({ initialData, onDataChange }) => {
     },
   });
 
-  const handleLocaleSubmit = async (locale, data) => {
+  const handleLocaleSubmit = async (locale, data, resetFormData) => {
     try {
       setLoading(prev => ({ ...prev, [locale]: true }));
       setErrors(prev => ({ ...prev, [locale]: '' }));
@@ -54,6 +54,15 @@ const MerchForm = ({ initialData, onDataChange }) => {
           ...prev,
           [locale]: { ...prev[locale], ...data },
         }));
+
+        // Reset form data to match saved data
+        if (resetFormData) {
+          resetFormData({
+            status: data.status,
+            content: data.content,
+            link: data.link,
+          });
+        }
 
         // Clear success message after 3 seconds
         setTimeout(() => {
@@ -70,9 +79,6 @@ const MerchForm = ({ initialData, onDataChange }) => {
     }
   };
 
-  const onSubmitUa = data => handleLocaleSubmit('ua', data);
-  const onSubmitEn = data => handleLocaleSubmit('en', data);
-
   // Update forms when initialData changes
   useEffect(() => {
     setValueUa('status', initialData.ua.status);
@@ -87,10 +93,39 @@ const MerchForm = ({ initialData, onDataChange }) => {
   }, [initialData.en, setValueEn]);
 
   const LocaleForm = ({ locale, register, handleSubmit, errors, watch, setValue, onSubmit }) => {
-    const statusValue = watch('status');
-    const isActive = statusValue === 'on';
+    const [formData, setFormData] = useState({
+      status: initialData[locale].status,
+      content: initialData[locale].content,
+      link: initialData[locale].link,
+    });
+    const [hasChanges, setHasChanges] = useState(false);
+
+    const isActive = formData.status === 'on';
     const localeName = locale === 'ua' ? 'Українська версія' : 'English version';
     const isUa = locale === 'ua';
+
+    // Update form data when initialData changes
+    useEffect(() => {
+      const newFormData = {
+        status: initialData[locale].status,
+        content: initialData[locale].content,
+        link: initialData[locale].link,
+      };
+      setFormData(newFormData);
+      // Also update React Hook Form
+      setValue('status', newFormData.status);
+      setValue('content', newFormData.content);
+      setValue('link', newFormData.link);
+    }, [initialData, locale, setValue]);
+
+    // Check for changes
+    useEffect(() => {
+      const changed =
+        formData.status !== initialData[locale].status ||
+        formData.content !== initialData[locale].content ||
+        formData.link !== initialData[locale].link;
+      setHasChanges(changed);
+    }, [formData, initialData, locale]);
 
     return (
       <div className={styles.localeSection}>
@@ -109,7 +144,7 @@ const MerchForm = ({ initialData, onDataChange }) => {
           )}
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+        <form onSubmit={handleSubmit(data => onSubmit(data, setFormData))} className={styles.form}>
           {/* Status Toggle */}
           <div className={styles.formGroup}>
             <label className={styles.label}>Статус кнопки</label>
@@ -120,6 +155,7 @@ const MerchForm = ({ initialData, onDataChange }) => {
                   checked={isActive}
                   onChange={e => {
                     const newStatus = e.target.checked ? 'on' : 'off';
+                    setFormData(prev => ({ ...prev, status: newStatus }));
                     setValue('status', newStatus);
                   }}
                 />
@@ -136,6 +172,11 @@ const MerchForm = ({ initialData, onDataChange }) => {
               {...register('content', {
                 required: "Текст кнопки обов'язковий",
                 maxLength: { value: 50, message: 'Максимум 50 символів' },
+                onChange: e => {
+                  const value = e.target.value;
+                  setFormData(prev => ({ ...prev, content: value }));
+                  setValue('content', value);
+                },
               })}
               error={errors.content?.message}
               placeholder={isUa ? 'Наш мерч' : 'Merch store'}
@@ -154,6 +195,11 @@ const MerchForm = ({ initialData, onDataChange }) => {
                   value: /^https?:\/\/.+/,
                   message: 'Посилання має починатися з http:// або https://',
                 },
+                onChange: e => {
+                  const value = e.target.value;
+                  setFormData(prev => ({ ...prev, link: value }));
+                  setValue('link', value);
+                },
               })}
               error={errors.link?.message}
               placeholder="https://example.com/merch"
@@ -169,7 +215,7 @@ const MerchForm = ({ initialData, onDataChange }) => {
             <button
               type="submit"
               className={styles.saveButton}
-              disabled={loading[locale] || !isActive}
+              disabled={loading[locale] || !hasChanges}
             >
               {loading[locale] ? 'Збереження...' : 'Зберегти налаштування'}
             </button>
@@ -188,7 +234,7 @@ const MerchForm = ({ initialData, onDataChange }) => {
         errors={errorsUa}
         watch={watchUa}
         setValue={setValueUa}
-        onSubmit={onSubmitUa}
+        onSubmit={(data, resetFormData) => handleLocaleSubmit('ua', data, resetFormData)}
       />
 
       <LocaleForm
@@ -198,7 +244,7 @@ const MerchForm = ({ initialData, onDataChange }) => {
         errors={errorsEn}
         watch={watchEn}
         setValue={setValueEn}
-        onSubmit={onSubmitEn}
+        onSubmit={(data, resetFormData) => handleLocaleSubmit('en', data, resetFormData)}
       />
     </div>
   );
