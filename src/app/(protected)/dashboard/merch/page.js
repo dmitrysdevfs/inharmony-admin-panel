@@ -42,14 +42,6 @@ export default function MerchPage() {
     );
   }
 
-  if (!isAdmin) {
-    return (
-      <div className={styles.container}>
-        <div className={styles.error}>Недостатньо прав для доступу до налаштувань мерчу</div>
-      </div>
-    );
-  }
-
   return (
     <div className={styles.container}>
       <div className={styles.header}>

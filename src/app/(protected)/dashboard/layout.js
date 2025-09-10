@@ -22,7 +22,7 @@ export default function DashboardLayout({ children }) {
       { name: 'Звіти', href: '/dashboard/reports', icon: '📈' },
       ...(isAdmin ? [{ name: 'Користувачі', href: '/dashboard/users', icon: '👥' }] : []),
       { name: 'Профіль', href: '/dashboard/users/profile', icon: '👤' },
-      ...(isAdmin ? [{ name: 'Мерч', href: '/dashboard/merch', icon: '🛍️' }] : []),
+      { name: 'Мерч', href: '/dashboard/merch', icon: '🛍️' },
     ],
     [isAdmin]
   );
@@ -68,12 +68,7 @@ export default function DashboardLayout({ children }) {
       {/* Sidebar */}
       <aside className={styles.sidebar}>
         <div className={styles.logo}>
-          <Image
-            src="/logo.png" 
-            alt="InHarmony Logo"
-            width={73}
-            height={73}
-          />
+          <Image src="/logo.png" alt="InHarmony Logo" width={73} height={73} />
         </div>
         <nav className={styles.nav}>
           {navigation.map(item => {
