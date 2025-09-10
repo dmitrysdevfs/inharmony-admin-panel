@@ -4,7 +4,6 @@ import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { useMemo } from 'react';
-import Button from '@/components/ui/Button';
 import Image from 'next/image';
 import styles from './DashboardLayout.module.css';
 

@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Image from 'next/image';
-import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import styles from './CollectionForm.module.css';
 
@@ -200,7 +199,9 @@ const CollectionForm = ({ collection, onSubmit, loading = false, locale = 'ua' }
               className={styles.fileInput}
               id="image-upload"
             />
+
             <label htmlFor="image-upload" className={styles.fileLabel}>
+              <Image src="/camera.png" alt="camera icon" width={50} height={48} />
               {imagePreview ? 'Змінити зображення' : 'Перетягніть сюди або оберіть файл'}
             </label>
             {imagePreview && (
@@ -359,18 +360,16 @@ const CollectionForm = ({ collection, onSubmit, loading = false, locale = 'ua' }
           </div>
         </div>
 
-         <div className={styles.formActions}>
-        <button className={styles.applyBtn} type="submit" disabled={loading}>
-          {loading ? 'Збереження...' : collection ? 'Оновити збір' : 'Створити збір'}
-        </button>
+        <div className={styles.formActions}>
+          <button className={styles.applyBtn} type="submit" disabled={loading}>
+            {loading ? 'Збереження...' : collection ? 'Оновити збір' : 'Створити збір'}
+          </button>
 
-        <button className={styles.cancelBtn} type="button" onClick={() => window.history.back()}>
-          Скасувати
-        </button>
+          <button className={styles.cancelBtn} type="button" onClick={() => window.history.back()}>
+            Скасувати
+          </button>
+        </div>
       </div>
-      </div>
-
-     
     </form>
   );
 };

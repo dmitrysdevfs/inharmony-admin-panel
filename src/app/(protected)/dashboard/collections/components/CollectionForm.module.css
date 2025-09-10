@@ -12,7 +12,7 @@
   grid-column: 1;
   display: flex;
   flex-direction: column;
-  width: 432px;
+  width: 100%;
   gap: 20px;
 }
 
@@ -162,7 +162,11 @@
 }
 
 .fileLabel {
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
   border: 1px dashed var(--btn);
   border-radius: 24px;
   background: white;
