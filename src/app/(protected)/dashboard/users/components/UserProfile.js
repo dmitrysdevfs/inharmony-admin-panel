@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { updateUser, fetchCurrentUser } from '@/services/userService';
+import { updateUser, fetchCurrentUser, fetchUserById } from '@/services/userService';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import { cn } from '@/lib/utils';
@@ -50,9 +50,9 @@ const UserProfile = ({ userId = null, user: propUser = null, isEditable = false 
         // Otherwise, we're viewing/editing current user's profile
         let userData;
         if (userId && currentUserData.role === 'admin') {
-          // For now, we'll use current user data since we don't have a specific endpoint
-          // In a real implementation, you'd fetch the specific user by ID
-          userData = currentUserData;
+          // Fetch the specific user by ID
+          const userResponse = await fetchUserById(userId);
+          userData = userResponse.data;
         } else {
           userData = currentUserData;
         }

@@ -1,41 +1,73 @@
 .container {
-  padding: 24px;
+  padding: 42px 0;
+  border-radius: 24px;
+  background: var(--ligtn-p-icon);
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-inline: 38px;
   margin-bottom: 24px;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 24px;
 }
 
 .header h2 {
   margin: 0;
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 600;
-  color: #1f2937;
+  color: #111827;
+}
+
+.creationBtn {
+  font-family: var(--font-family);
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 133%;
+  text-align: center;
+  color: var(--back);
+  border-radius: 21px;
+  border: none;
+  width: 280px;
+  height: 44px;
+  background: var(--btn);
+  transition:
+    background 0.5s ease,
+    transform 0.2s ease;
+  cursor: pointer;
+}
+
+.creationBtn:hover {
+  background: #641794;
+}
+
+.creationBtn:active {
+  transform: scale(0.96);
 }
 
 .loading {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 48px;
+  height: 200px;
   font-size: 16px;
   color: #6b7280;
 }
 
 .error {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 48px;
-  font-size: 16px;
-  color: #dc2626;
   background-color: #fef2f2;
   border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 12px 16px;
   border-radius: 8px;
-  margin: 24px;
+  margin: 0 38px 16px 38px;
+  font-size: 14px;
 }
 
 .nameCell {
@@ -46,6 +78,78 @@
 .emailCell {
   color: #6b7280;
   font-family: monospace;
+  font-size: 16px;
+}
+
+.passwordCell {
+  color: #6b7280;
+  font-family: monospace;
+  font-size: 16px;
+}
+
+.inlineInput {
+  width: 100%;
+}
+
+.inlineInput .input {
+  padding: 4px 8px;
+  font-size: 14px;
+  min-height: auto;
+  border-radius: 4px;
+}
+
+.passwordInputContainer {
+  position: relative;
+  width: 100%;
+}
+
+.passwordInputContainer .inlineInput {
+  width: 100%;
+}
+
+.passwordInputContainer .inlineInput .input {
+  padding-right: 32px;
+}
+
+.passwordToggle {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  transition: color 0.2s ease;
+  z-index: 1;
+}
+
+.passwordToggle:hover {
+  color: #374151;
+}
+
+.eyeIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.inlineSelect {
+  width: 100%;
+  padding: 4px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 14px;
+  background: white;
+}
+
+.inlineSelect:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
 .role {
@@ -70,12 +174,32 @@
 .actions {
   display: flex;
   gap: 8px;
-  align-items: center;
+}
+
+/* Override alignment for last column (actions) in users table */
+.usersTable tbody tr td:nth-child(5) {
+  text-align: left !important;
+}
+
+/* Alternative selector with higher specificity */
+.usersTable .td:nth-child(5) {
+  text-align: left !important;
+}
+
+/* Make first column (name) wider */
+.usersTable tbody tr td:nth-child(1) {
+  width: 200px !important;
+}
+
+.usersTable .td:nth-child(1) {
+  width: 200px !important;
 }
 
 .iconButton {
-  padding: 6px;
-  min-width: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px;
 }
 
 .icon {
@@ -90,47 +214,47 @@
   font-size: 16px;
 }
 
-.userList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.userItem {
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 12px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.userItem:hover {
-  background-color: #f9fafb;
-}
-
-.userInfo {
+.pagination {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.userInfo p {
-  margin: 0;
-  font-size: 14px;
-}
-
-.selectedUser {
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
   margin-top: 24px;
-  padding: 16px;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  background-color: #f9fafb;
+  padding: 0 38px;
 }
 
-.selectedUser h3 {
-  margin: 0 0 16px 0;
-  font-size: 18px;
-  font-weight: 600;
-  color: #1f2937;
+.paginationButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: white;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.paginationButton:hover:not(.disabled) {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.paginationButton.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.paginationIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.paginationInfo {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
 }
