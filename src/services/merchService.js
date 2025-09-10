@@ -76,3 +76,4 @@ export const organizeMerchByLocale = merchData => {
   return organized;
 };
 
+
