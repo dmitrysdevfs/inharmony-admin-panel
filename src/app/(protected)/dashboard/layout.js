@@ -22,7 +22,7 @@ export default function DashboardLayout({ children }) {
       { name: 'Звіти', href: '/dashboard/reports', icon: '📈' },
       ...(isAdmin ? [{ name: 'Користувачі', href: '/dashboard/users', icon: '👥' }] : []),
       { name: 'Профіль', href: '/dashboard/users/profile', icon: '👤' },
-      { name: 'Налаштування', href: '/dashboard/settings', icon: '⚙️' },
+      ...(isAdmin ? [{ name: 'Мерч', href: '/dashboard/merch', icon: '🛍️' }] : []),
     ],
     [isAdmin]
   );
