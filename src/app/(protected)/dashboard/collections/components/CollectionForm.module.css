@@ -1,42 +1,26 @@
 .form {
   /* max-width: 100%; */
   margin: 0;
-  padding: 32px;
+  /* padding: 32px; */
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 40px;
   align-items: start;
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  border-radius: 16px;
-  box-shadow:
-    0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .formLeft {
   grid-column: 1;
   display: flex;
   flex-direction: column;
-  gap: 32px;
-  background: white;
-  padding: 32px;
-  border-radius: 12px;
-  box-shadow:
-    0 1px 3px 0 rgba(0, 0, 0, 0.1),
-    0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  width: 432px;
+  gap: 20px;
 }
 
 .formRight {
   grid-column: 2;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  background: white;
-  padding: 24px;
-  border-radius: 12px;
-  box-shadow:
-    0 1px 3px 0 rgba(0, 0, 0, 0.1),
-    0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  gap: 20px;
 }
 
 .formGroup {
@@ -64,18 +48,19 @@
 
 .label {
   display: block;
-  font-size: 14px;
+  font-family: var(--font-family);
   font-weight: 600;
-  color: #1f2937;
-  margin-bottom: 8px;
-  letter-spacing: 0.025em;
+  font-size: 16px;
+  line-height: 150%;
+  color: var(--black);
 }
 
 .select {
   width: 100%;
+  height: 48px;
   padding: 12px 16px;
-  border: 2px solid #e5e7eb;
-  border-radius: 8px;
+  border: none;
+  border-radius: 24px;
   font-size: 14px;
   background-color: white;
   transition: all 0.2s ease;
@@ -86,7 +71,7 @@
 .select:focus {
   outline: none;
   border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 px rgba(59, 130, 246, 0.1);
 }
 
 .select:hover {
@@ -96,6 +81,7 @@
 /* Компактні поля для правого блоку */
 .formRight .input,
 .formRight .select {
+  border-radius: 24px;
   padding: 10px 14px;
   font-size: 13px;
   line-height: 1.3;
@@ -104,8 +90,8 @@
 .textarea {
   width: 100%;
   padding: 16px 20px;
-  border: 2px solid #e5e7eb;
-  border-radius: 8px;
+  /* border: 2px solid #e5e7eb; */
+  border-radius: 24px;
   font-size: 14px;
   font-family: inherit;
   resize: vertical;
@@ -124,13 +110,16 @@
 
 .textareaWide {
   min-height: 80px;
-  font-size: 14px;
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 150%;
+  color: rgba(0, 0, 0, 0.5);
   padding: 16px 20px;
   width: 100%;
-  border: 2px solid #e5e7eb;
-  border-radius: 8px;
+  border: none;
+  border-radius: 24px;
   transition: all 0.2s ease;
-  line-height: 1.5;
 }
 
 .textarea:focus,
@@ -174,23 +163,26 @@
 
 .fileLabel {
   display: inline-block;
-  padding: 12px 20px;
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-  color: white;
-  border: none;
-  border-radius: 8px;
+  border: 1px dashed var(--btn);
+  border-radius: 24px;
+  background: white;
+  padding: 8px 12px;
+  width: 230px;
+  height: 212px;
   cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 133%;
+  text-align: center;
+  color: var(--grey);
   text-align: center;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
 }
 
 .fileLabel:hover {
-  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+ transform: translateY(-1px);
+  box-shadow: 0 2px 2px rgba(190, 59, 246, 0.3);
 }
 
 .requiredIndicator {
@@ -200,10 +192,10 @@
 
 .imagePreview {
   max-width: 200px;
-  border-radius: 12px;
+  border-radius: 24px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  border: 3px solid white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  border: 1px solid white;
 }
 
 .imagePreview img {
@@ -228,8 +220,9 @@
 .tagInput {
   flex: 1;
   padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  /* border: 1px solid #ddd; */
+  border-radius: 24px;
+  height: 48px;
   font-size: 14px;
 }
 
@@ -326,7 +319,6 @@
   gap: 16px;
   justify-content: flex-end;
   padding: 24px 0 0 0;
-  border-top: 2px solid #e5e7eb;
   margin-top: 32px;
 }
 
@@ -335,10 +327,6 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 16px;
-  background: #f9fafb;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
 }
 
 .longDescContainer .formGroup {

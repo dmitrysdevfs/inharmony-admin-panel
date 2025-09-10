@@ -134,6 +134,17 @@ const CollectionForm = ({ collection, onSubmit, loading = false, locale = 'ua' }
           <small className={styles.helpText}>Максимум 144 символи</small>
         </div>
 
+        {/* Важливість збору */}
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Важливість збору *</label>
+          <select {...register('importance')} className={styles.select}>
+            <option value="urgent">Терміново</option>
+            <option value="important">Важливий</option>
+            <option value="non-urgent">Не терміново</option>
+            <option value="permanent">Постійний</option>
+          </select>
+        </div>
+
         {/* Розширений опис */}
         <div className={styles.formGroup}>
           <label className={styles.label}>Розширений опис *</label>
@@ -191,7 +202,7 @@ const CollectionForm = ({ collection, onSubmit, loading = false, locale = 'ua' }
               id="image-upload"
             />
             <label htmlFor="image-upload" className={styles.fileLabel}>
-              {imagePreview ? 'Змінити зображення' : 'Вибрати зображення'}
+              {imagePreview ? 'Змінити зображення' : 'Перетягніть сюди або оберіть файл'}
             </label>
             {imagePreview && (
               <div className={styles.imagePreview}>
@@ -350,15 +361,6 @@ const CollectionForm = ({ collection, onSubmit, loading = false, locale = 'ua' }
         </div>
 
         {/* Важливість */}
-        <div className={styles.formGroup}>
-          <label className={styles.label}>Важливість збору *</label>
-          <select {...register('importance')} className={styles.select}>
-            <option value="urgent">Терміново</option>
-            <option value="important">Важливий</option>
-            <option value="non-urgent">Не терміново</option>
-            <option value="permanent">Постійний</option>
-          </select>
-        </div>
       </div>
 
       <div className={styles.formActions}>
