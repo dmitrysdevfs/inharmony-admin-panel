@@ -32,17 +32,19 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   white-space: nowrap;
+  background: var(--red-light);
+  color: var(--red);
 }
 
 .status.active {
-  background-color: #d1fae5;
+  background: #d1fae5;
   color: #065f46;
 }
 
-.status.completed {
+/* .status.completed {
   background-color: #dbeafe;
   color: #1e40af;
-}
+} */
 
 .content {
 }
