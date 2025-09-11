@@ -14,6 +14,13 @@ const CollectionCard = ({ collection }) => {
 
   const progress = target !== 0 ? (collected / target) * 100 : 0;
 
+  const importanceMap = {
+    urgent: 'Терміново',
+    important: 'Важливий',
+    'non-urgent': 'Не терміново',
+    permanent: 'Постійний',
+  };
+
   return (
     <div className={styles.card}>
       <div className={styles.header}>
@@ -25,7 +32,6 @@ const CollectionCard = ({ collection }) => {
 
       <div className={styles.content}>
         <p className={styles.description}>{collection.desc}</p>
-
         <div className={styles.images}>
           {collection.image &&
             collection.image.map(img => {
@@ -45,6 +51,16 @@ const CollectionCard = ({ collection }) => {
               );
             })}
         </div>
+
+        {collection.long_desc && (
+          <div className={styles.longDesc}>
+            {Object.entries(collection.long_desc)
+              .filter(([key]) => key !== '_id')
+              .map(([key, text], i) => (
+                <p key={key}>{text}</p>
+              ))}
+          </div>
+        )}
 
         <div className={styles.stats}>
           <div className={styles.stat}>
@@ -66,6 +82,28 @@ const CollectionCard = ({ collection }) => {
               />
             </div>
             <span className={styles.progressText}>{Math.round(progress)}%</span>
+          </div>
+
+          <div className={styles.stat}>
+            <span className={styles.label}>Важливість:</span>
+            <p className={styles.value}>
+              {importanceMap[collection.importance] || collection.importance}
+            </p>
+          </div>
+
+          <div className={styles.stat}>
+            <span className={styles.label}>Кількість донорів:</span>
+            <p className={styles.value}>{collection.peopleDonate}</p>
+          </div>
+
+          <div className={styles.stat}>
+            <span className={styles.label}>Термін реалізації (днів):</span>
+            <p className={styles.value}>{collection.days}</p>
+          </div>
+
+          <div className={styles.stat}>
+            <span className={styles.label}>Кількість відгуків:</span>
+            <p className={styles.value}>{collection.quantity}</p>
           </div>
         </div>
 
