@@ -184,6 +184,31 @@ const CollectionForm = ({ collection, onSubmit, loading = false, locale = 'ua' }
             </div>
           </div>
         </div>
+
+        {/* Кількість відгуків та статус */}
+        <div className={`${styles.numbersGroup} ${styles.alignedWithRight}`}>
+          <div className={styles.formGroup}>
+            <Input
+              label="Кількість відгуків"
+              type="number"
+              {...register('quantity', {
+                min: {
+                  value: 0,
+                  message: 'Кількість відгуків не може бути відʼємною',
+                },
+              })}
+              error={errors.quantity?.message}
+              placeholder="12"
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <label className={styles.label}>Статус</label>
+            <select {...register('status')} className={styles.select}>
+              <option value="active">Активний</option>
+              <option value="closed">Закритий</option>
+            </select>
+          </div>
+        </div>
       </div>
 
       {/* Правий блок - технічні поля та налаштування */}
@@ -201,19 +226,24 @@ const CollectionForm = ({ collection, onSubmit, loading = false, locale = 'ua' }
             />
 
             <label htmlFor="image-upload" className={styles.fileLabel}>
-              <Image src="/camera.png" alt="camera icon" width={50} height={48} />
-              {imagePreview ? 'Змінити зображення' : 'Перетягніть сюди або оберіть файл'}
+              {imagePreview ? (
+                <div className={styles.imagePreviewContainer}>
+                  <Image
+                    src={imagePreview}
+                    alt="Превʼю зображення збору"
+                    width={300}
+                    height={200}
+                    className={styles.previewImage}
+                  />
+                  <div className={styles.overlayText}>Змінити зображення</div>
+                </div>
+              ) : (
+                <>
+                  <Image src="/camera.png" alt="camera icon" width={50} height={48} />
+                  Перетягніть сюди або оберіть файл
+                </>
+              )}
             </label>
-            {imagePreview && (
-              <div className={styles.imagePreview}>
-                <Image
-                  src={imagePreview}
-                  alt="Превʼю зображення збору"
-                  width={300}
-                  height={200}
-                />
-              </div>
-            )}
           </div>
         </div>
 
@@ -330,31 +360,6 @@ const CollectionForm = ({ collection, onSubmit, loading = false, locale = 'ua' }
               <option value="день">день</option>
               <option value="дні">дні</option>
               <option value="днів">днів</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Кількість відгуків та статус */}
-        <div className={styles.numbersGroup}>
-          <div className={styles.formGroup}>
-            <Input
-              label="Кількість відгуків"
-              type="number"
-              {...register('quantity', {
-                min: {
-                  value: 0,
-                  message: 'Кількість відгуків не може бути відʼємною',
-                },
-              })}
-              error={errors.quantity?.message}
-              placeholder="12"
-            />
-          </div>
-          <div className={styles.formGroup}>
-            <label className={styles.label}>Статус</label>
-            <select {...register('status')} className={styles.select}>
-              <option value="active">Активний</option>
-              <option value="closed">Закритий</option>
             </select>
           </div>
         </div>
