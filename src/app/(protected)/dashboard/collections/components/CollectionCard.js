@@ -54,9 +54,11 @@ const CollectionCard = ({ collection }) => {
 
         {collection.long_desc && (
           <div className={styles.longDesc}>
-            {Object.values(collection.long_desc).map((text, i) => (
-              <p key={i}>{text}</p>
-            ))}
+            {Object.entries(collection.long_desc)
+              .filter(([key]) => key !== '_id')
+              .map(([key, text], i) => (
+                <p key={key}>{text}</p>
+              ))}
           </div>
         )}
 
