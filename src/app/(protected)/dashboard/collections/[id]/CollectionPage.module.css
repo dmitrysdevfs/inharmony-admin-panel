@@ -1,3 +1,19 @@
 .backButton {
-   margin-bottom: 30px;
+  border: 2px solid var(--btn);
+  border-radius: 24px;
+  background: transparent;
+  width: 180px;
+  height: 44px;
+  font-family: var(--font-family);
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 133%;
+  text-align: center;
+  color: var(--btn);
+  margin-bottom: 30px;
+  transition: all 0.5s ease;
+}
+.backButton:hover {
+  background: var(--btn);
+  color: #fff;
 }

@@ -48,14 +48,14 @@ export default function CollectionPage() {
 
   return (
     <>
-      <Button
+      <button
         size="large"
         variant="outline"
         onClick={() => router.push('/dashboard/collections')}
         className={styles.backButton}
       >
         Назад до списку
-      </Button>
+      </button>
 
       <CollectionCard collection={collection} />
     </>
