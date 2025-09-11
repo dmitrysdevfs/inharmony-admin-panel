@@ -211,7 +211,6 @@ const CollectionForm = ({ collection, onSubmit, loading = false, locale = 'ua' }
                   alt="Превʼю зображення збору"
                   width={300}
                   height={200}
-                  style={{ objectFit: 'cover' }}
                 />
               </div>
             )}
