@@ -150,10 +150,10 @@ const UserProfile = ({ userId = null, user: propUser = null, isEditable = false 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <Button variant="outline" onClick={() => router.back()} className={styles.backButton}>
+        <button onClick={() => router.back()} className={styles.backButton}>
           <ArrowLeftIcon className={styles.icon} />
           Назад
-        </Button>
+        </button>
 
         <h2>Профіль користувача</h2>
 
@@ -173,7 +173,7 @@ const UserProfile = ({ userId = null, user: propUser = null, isEditable = false 
 
       <div className={styles.profileCard}>
         <div className={styles.field}>
-          <label className={styles.label}>Ім&apos;я</label>
+          <label className={styles.label}>Ім&apos;я:</label>
           {editing ? (
             <Input
               name="name"
@@ -188,7 +188,7 @@ const UserProfile = ({ userId = null, user: propUser = null, isEditable = false 
         </div>
 
         <div className={styles.field}>
-          <label className={styles.label}>Email</label>
+          <label className={styles.label}>Email:</label>
           {editing ? (
             <Input
               name="email"
@@ -204,7 +204,7 @@ const UserProfile = ({ userId = null, user: propUser = null, isEditable = false 
         </div>
 
         <div className={styles.field}>
-          <label className={styles.label}>Роль</label>
+          <label className={styles.label}>Роль:</label>
           {editing && canChangeRole() ? (
             <select
               name="role"
