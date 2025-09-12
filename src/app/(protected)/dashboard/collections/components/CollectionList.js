@@ -231,7 +231,10 @@ const CollectionList = ({ locale = 'ua' }) => {
           <Button
             size="small"
             variant="secondary"
-            onClick={() => router.push(`${BASE_ROUTE}/edit/${row.id}`)}
+            onClick={e => {
+              e.stopPropagation();
+              router.push(`${BASE_ROUTE}/edit/${row.id}`);
+            }}
             className={styles.iconButton}
           >
             <PencilIcon className={styles.icon} />
