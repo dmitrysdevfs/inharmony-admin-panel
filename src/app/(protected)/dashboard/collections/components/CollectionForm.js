@@ -4,11 +4,14 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Image from 'next/image';
 import Input from '@/components/ui/Input';
+import { updateCollectionViaEdit } from '@/services/collectionsService';
+import { useRouter } from 'next/navigation';
 import styles from './CollectionForm.module.css';
 
 const CollectionForm = ({ collection, onSubmit, loading = false, locale = 'ua' }) => {
-  const [imagePreview, setImagePreview] = useState(collection?.image || null);
+  const [imagePreview, setImagePreview] = useState(collection?.image?.[0]?.url || null);
   const [imageFile, setImageFile] = useState(null);
+  const router = useRouter();
 
   const {
     register,
@@ -73,12 +76,24 @@ const CollectionForm = ({ collection, onSubmit, loading = false, locale = 'ua' }
       quantity: Number(data.quantity),
     };
 
-    // Convert file to base64 as backend expects string ($binary)
     if (imageFile) {
-      formData.image = await convertFileToBase64(imageFile);
+      const base64 = await convertFileToBase64(imageFile);
+      formData.image = [{ url: base64, path: '', _id: '' }];
+    } else if (collection?.image?.[0]) {
+      formData.image = [collection.image[0]];
     }
 
-    onSubmit(formData);
+    try {
+      if (collection?._id) {
+        await updateCollectionViaEdit(locale, collection._id, formData);
+      } else {
+        await onSubmit(formData);
+      }
+
+      router.push('/dashboard/collections');
+    } catch (err) {
+      console.error('Помилка при збереженні:', err);
+    }
   };
 
   const handleImageChange = e => {
@@ -204,11 +219,11 @@ const CollectionForm = ({ collection, onSubmit, loading = false, locale = 'ua' }
               <Image src="/camera.png" alt="camera icon" width={50} height={48} />
               {imagePreview ? 'Змінити зображення' : 'Перетягніть сюди або оберіть файл'}
             </label>
-            {imagePreview && (
+            {imagePreview && imagePreview.trim() !== '' && (
               <div className={styles.imagePreview}>
                 <Image
                   src={imagePreview}
-                  alt="Превʼю зображення збору"
+                  alt={collection?.alt || 'Превʼю зображення збору'}
                   width={300}
                   height={200}
                 />
